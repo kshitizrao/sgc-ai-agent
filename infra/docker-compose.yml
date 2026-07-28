@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: sgc
+      POSTGRES_PASSWORD: sgc
+      POSTGRES_DB: sgc_agent
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sgc -d sgc_agent"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  agent-api:
+    build:
+      context: ..
+      dockerfile: apps/agent-api/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://sgc:sgc@postgres:5432/sgc_agent
+      DATABASE_URL_SYNC: postgresql://sgc:sgc@postgres:5432/sgc_agent
+      REDIS_URL: redis://redis:6379/0
+      AGENT_API_KEY: dev-api-key-change-in-production
+      OLLAMA_BASE_URL: http://ollama:11434
+      DEFAULT_LLM_MODEL: ollama/llama3.1:8b
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  ollama_data:

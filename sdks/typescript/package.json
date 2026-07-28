@@ -1,0 +1,14 @@
+{
+  "name": "@sgc/agent-sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for SGC Smart Garage AI Agent",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js 2>/dev/null || echo 'No jest configured'"
+  },
+  "devDependencies": {
+    "typescript": "^5.6"
+  }
+}

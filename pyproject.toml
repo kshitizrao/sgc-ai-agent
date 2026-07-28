@@ -1,0 +1,34 @@
+[project]
+name = "sgc-ai-agent"
+version = "0.1.0"
+description = "Smart Garage Customer AI Agent Platform"
+requires-python = ">=3.12"
+readme = "README.md"
+
+[tool.uv.workspace]
+members = [
+    "packages/shared",
+    "packages/db",
+    "packages/llm-providers",
+    "packages/governance",
+    "packages/tools",
+    "packages/domain-services",
+    "packages/agent-core",
+    "apps/agent-api",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "httpx>=0.27",
+    "ruff>=0.8",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

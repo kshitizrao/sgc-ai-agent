@@ -1,0 +1,9 @@
+{
+  "name": "sgc-ai-agent",
+  "private": true,
+  "workspaces": ["sdks/typescript"],
+  "scripts": {
+    "build:sdk": "npm run build --workspace=@sgc/agent-sdk",
+    "test:sdk": "npm run test --workspace=@sgc/agent-sdk"
+  }
+}

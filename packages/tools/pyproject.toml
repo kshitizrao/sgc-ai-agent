@@ -1,0 +1,22 @@
+[project]
+name = "sgc-tools"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "sgc-shared",
+    "sgc-db",
+    "sgc-domain-services",
+    "pydantic>=2.9",
+]
+
+[tool.uv.sources]
+sgc-shared = { workspace = true }
+sgc-db = { workspace = true }
+sgc-domain-services = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sgc_tools"]

@@ -8,8 +8,9 @@ echo "======================================"
 # Ensure we are in the project root
 cd "$(dirname "$0")/.."
 
-echo "[1/5] Pulling latest code from GitHub..."
-git pull origin main
+BRANCH=${1:-main}
+echo "[1/5] Pulling latest code from GitHub ($BRANCH branch)..."
+git pull origin $BRANCH
 
 echo "[2/5] Starting Docker containers with GPU support..."
 # Note: Ensure NVIDIA Container Toolkit is installed on your g6.2xlarge instance.

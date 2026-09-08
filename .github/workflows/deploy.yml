@@ -1,0 +1,33 @@
+name: Deploy to EC2 Environment
+
+on:
+  # push:
+  #   branches:
+  #     - dev
+  #     - main
+  workflow_dispatch: # Allows manual triggering from the GitHub Actions UI
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Navigate to the repository on the EC2 instance
+            cd sgc-ai-agent
+            
+            # Make sure deploy.sh is executable (in case it wasn't tracked as executable in git)
+            chmod +x scripts/deploy.sh
+            
+            # Run the deployment script and pass the current branch name
+            ./scripts/deploy.sh ${{ github.ref_name }}

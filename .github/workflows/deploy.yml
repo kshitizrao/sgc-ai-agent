@@ -18,16 +18,35 @@ jobs:
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          REPO: ${{ github.repository }}
+          TARGET_BRANCH: ${{ github.ref_name }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GH_PAT,REPO,TARGET_BRANCH
           script: |
-            # Navigate to the repository on the EC2 instance
+            mkdir -p kr987
+            cd kr987
+            
+            if [ ! -d "sgc-ai-agent/.git" ]; then
+              echo "sgc-ai-agent repository not found. Cloning..."
+              rm -rf sgc-ai-agent
+              mkdir -p sgc-ai-agent
+              git clone https://x-access-token:$GH_PAT@github.com/$REPO.git sgc-ai-agent
+            fi
+            
             cd sgc-ai-agent
             
-            # Make sure deploy.sh is executable (in case it wasn't tracked as executable in git)
+            # Set remote URL to use PAT for authentication on future fetches/pulls
+            git remote set-url origin https://x-access-token:$GH_PAT@github.com/$REPO.git
+            git fetch origin
+            git checkout $TARGET_BRANCH
+            
+            # Make sure deploy.sh is executable
             chmod +x scripts/deploy.sh
             
             # Run the deployment script and pass the current branch name
-            ./scripts/deploy.sh ${{ github.ref_name }}
+            ./scripts/deploy.sh $TARGET_BRANCH

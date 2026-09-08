@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import uuid
 
-from agent_api.deps import get_db_session, verify_api_key
+from agent_api.deps import get_db_session
 from sgc_agent.orchestrator import AgentOrchestrator
 from sgc_db.repositories.sessions import SessionRepository
 from sgc_llm.router import ModelRouter
@@ -70,7 +70,7 @@ async def health():
 
 
 @app.get("/v1/models")
-async def list_models(_: str = Depends(verify_api_key)):
+async def list_models():
     router = ModelRouter()
     return {"models": router.list_models()}
 
@@ -78,7 +78,6 @@ async def list_models(_: str = Depends(verify_api_key)):
 @app.post("/v1/sessions", response_model=CreateSessionResponse)
 async def create_session(
     body: CreateSessionRequest,
-    _: str = Depends(verify_api_key),
     session=Depends(get_db_session),
 ):
     session_id = str(uuid.uuid4())
@@ -97,7 +96,6 @@ async def create_session(
 @app.post("/v1/chat", response_model=ChatResponse)
 async def chat(
     body: ChatRequest,
-    _: str = Depends(verify_api_key),
     session=Depends(get_db_session),
 ):
     repo = SessionRepository(session)
@@ -145,13 +143,7 @@ async def chat(
 @app.websocket("/v1/chat/stream")
 async def chat_stream(websocket: WebSocket):
     await websocket.accept()
-    settings = get_settings()
     try:
-        api_key = websocket.headers.get("x-api-key", "")
-        if api_key != settings.agent_api_key:
-            await websocket.close(code=4001)
-            return
-
         data = await websocket.receive_json()
         session_id = data.get("session_id")
         message = data.get("message", "")
@@ -183,7 +175,6 @@ async def chat_stream(websocket: WebSocket):
 @app.post("/v1/tools/invoke", response_model=ToolInvokeResponse)
 async def invoke_tool(
     body: ToolInvokeRequest,
-    _: str = Depends(verify_api_key),
     session=Depends(get_db_session),
 ):
     registry = create_registry()

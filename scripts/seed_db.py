@@ -42,22 +42,29 @@ async def seed() -> None:
     async with factory() as session:
         for row in SEED_PARTS:
             session.add(Part(**row))
+        await session.flush()
         for row in SEED_FITMENTS:
             session.add(PartFitment(**row))
         for row in SEED_INTERCHANGES:
             session.add(PartInterchange(**row))
+        await session.flush()
         for row in SEED_SEGMENTS:
             session.add(VehicleSegment(**row))
+        await session.flush()
         for row in SEED_PACKAGES:
             session.add(ServicePackage(**row))
+        await session.flush()
         for row in SEED_INCLUSIONS:
             session.add(ServiceInclusion(**row))
         for row in SEED_PRICING:
             session.add(PricingMatrix(**row))
+        await session.flush()
         for row in SEED_TRIAGE:
             session.add(EmergencyTriageRule(**row))
+        await session.flush()
         for row in SEED_GARAGES:
             session.add(Garage(**row))
+        await session.flush()
         for g in SEED_GARAGES:
             session.add(GarageCapability(
                 garage_id=g["garage_id"],
@@ -81,6 +88,7 @@ async def seed() -> None:
                 has_customer_lounge=True,
                 provides_warranty="6 Months on Parts, 1 Month on Labor",
             ))
+        await session.flush()
         for row in SEED_DIAGNOSTICS:
             if "issue_name" in row:
                 session.add(VehicleIssue(**row))
@@ -88,6 +96,7 @@ async def seed() -> None:
                 session.add(SymptomMapping(**row))
             elif "prediction_id" in row:
                 session.add(PredictiveFailureMatrix(**row))
+        await session.flush()
         for row in SEED_CLAIMS:
             if "claim_id" in row and "insurance_provider" in row:
                 session.add(Claim(**row))
@@ -95,6 +104,7 @@ async def seed() -> None:
                 session.add(PolicyRule(**row))
             elif "estimate_line_id" in row:
                 session.add(ClaimLineItem(**row))
+        await session.flush()
 
         session.add(FieldResource(
             resource_id="MECH-BIKE-04",

@@ -1,0 +1,59 @@
+# EC2 Deployment Walkthrough
+
+I have successfully generated the deployment scripts needed to run the SGC AI Agent on your `g6.2xlarge` EC2 instance. 
+
+Here is exactly what you need to do to get the agent running on AWS:
+
+## 1. Commit and Push the New Files
+First, commit the files I just created and push them to your GitHub repository.
+
+```bash
+git add infra/docker-compose.prod.yml scripts/deploy.sh
+git commit -m "Add production deployment scripts for EC2"
+git push origin main
+```
+
+## 2. SSH into your EC2 Instance
+Connect to your EC2 instance using your terminal or the AWS Console:
+```bash
+ssh -i /path/to/your-key.pem ubuntu@ec2-13-126-138-33.ap-south-1.compute.amazonaws.com
+```
+
+## 3. Ensure NVIDIA Container Toolkit is Installed
+Because you are using a `g6.2xlarge` instance (which has an L4 GPU), the Docker daemon needs the NVIDIA Container Toolkit to pass the GPU to Ollama. 
+
+> [!TIP]
+> If you launched your instance using the **AWS Deep Learning AMI GPU**, this is likely already installed. 
+
+If it's not installed, you will need to install it by running the official NVIDIA setup commands on your instance:
+```bash
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+```
+
+## 4. Clone the Code on EC2
+Clone your repository onto the EC2 instance:
+```bash
+git clone https://github.com/your-username/sgc-ai-agent.git
+cd sgc-ai-agent
+```
+
+## 5. Execute the Deployment Script
+Run the automated deployment script I created. This will pull the latest code, start the Docker containers with GPU support, run database migrations, and download the `llama3.1:8b` model inside the Ollama container.
+
+```bash
+chmod +x scripts/deploy.sh
+./scripts/deploy.sh
+```
+
+## 6. Verify the Deployment
+Once the script finishes, verify the containers are running:
+```bash
+docker ps
+```
+You should see `postgres`, `redis`, `ollama`, and `agent-api` running. 
+
+Finally, ensure your AWS **Security Group** allows inbound traffic on port `8000`, and you can test the API by visiting:
+`http://ec2-13-126-138-33.ap-south-1.compute.amazonaws.com:8000/docs`

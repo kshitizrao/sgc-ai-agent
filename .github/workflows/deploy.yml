@@ -43,7 +43,15 @@ jobs:
             
             # Set remote URL to use PAT for authentication on future fetches/pulls
             git remote set-url origin https://x-access-token:$GH_PAT@github.com/$REPO.git
+            
+            # Ignore file permission changes to prevent git pull conflicts caused by chmod +x
+            git config core.fileMode false
+            
             git fetch origin
+            
+            # Discard local file permission changes to prevent pull conflicts
+            git reset --hard HEAD
+            
             git checkout $TARGET_BRANCH
             
             # Make sure deploy.sh is executable

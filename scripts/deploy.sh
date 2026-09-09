@@ -11,6 +11,7 @@ cd "$(dirname "$0")/.."
 BRANCH=${1:-main}
 AWS_SECRET_NAME=${2:-}
 echo "[1/5] Pulling latest code from GitHub ($BRANCH branch)..."
+git reset --hard HEAD
 git pull origin $BRANCH
 
 echo "[2/5] Fetching secrets from AWS Secrets Manager..."

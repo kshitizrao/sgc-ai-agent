@@ -15,3 +15,4 @@ sdks/typescript/dist/
 *.db
 .coverage
 htmlcov/
+aws_secrets.json

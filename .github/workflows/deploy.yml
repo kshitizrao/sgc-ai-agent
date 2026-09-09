@@ -22,11 +22,12 @@ jobs:
           GH_PAT: ${{ secrets.GH_PAT }}
           REPO: ${{ github.repository }}
           TARGET_BRANCH: ${{ github.ref_name }}
+          AWS_SECRET_NAME: ${{ secrets.AWS_SECRET_NAME }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: GH_PAT,REPO,TARGET_BRANCH
+          envs: GH_PAT,REPO,TARGET_BRANCH,AWS_SECRET_NAME
           script: |
             mkdir -p kr987
             cd kr987
@@ -48,5 +49,5 @@ jobs:
             # Make sure deploy.sh is executable
             chmod +x scripts/deploy.sh
             
-            # Run the deployment script and pass the current branch name
-            ./scripts/deploy.sh $TARGET_BRANCH
+            # Run the deployment script and pass the current branch name and AWS_SECRET_NAME
+            ./scripts/deploy.sh $TARGET_BRANCH $AWS_SECRET_NAME

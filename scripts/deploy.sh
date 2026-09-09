@@ -9,10 +9,21 @@ echo "======================================"
 cd "$(dirname "$0")/.."
 
 BRANCH=${1:-main}
+AWS_SECRET_NAME=${2:-}
 echo "[1/5] Pulling latest code from GitHub ($BRANCH branch)..."
 git pull origin $BRANCH
 
-echo "[2/5] Starting Docker containers with GPU support..."
+echo "[2/5] Fetching secrets from AWS Secrets Manager..."
+if [ -n "$AWS_SECRET_NAME" ]; then
+    echo "Fetching secret: $AWS_SECRET_NAME"
+    # Ensure AWS CLI is configured via IAM Role, and jq is installed
+    aws secretsmanager get-secret-value --secret-id "$AWS_SECRET_NAME" --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > .env
+    echo ".env file generated from Secrets Manager."
+else
+    echo "Warning: AWS_SECRET_NAME not provided. Skipping secret fetch."
+fi
+
+echo "[3/5] Starting Docker containers with GPU support..."
 # Note: Ensure NVIDIA Container Toolkit is installed on your g6.2xlarge instance.
 docker compose -f infra/docker-compose.prod.yml up -d --build
 

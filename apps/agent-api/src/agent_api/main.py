@@ -1,3 +1,6 @@
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import Depends, FastAPI, Header, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -11,10 +14,30 @@ from sgc_shared.config import get_settings
 from sgc_shared.types import ContextEnvelope, CustomerContext, LocationContext
 from sgc_tools.registry import create_registry
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    from sgc_db.session import get_session_factory
+    from sqlalchemy import text
+    
+    factory = get_session_factory()
+    try:
+        async with factory() as session:
+            result = await session.execute(text("SELECT current_database()"))
+            db_name = result.scalar()
+            logger.info(f"Successfully connected to the database. Database name: {db_name}")
+    except Exception as e:
+        logger.error(f"Failed to connect to the database: {e}")
+        
+    yield
+
 app = FastAPI(
     title="SGC AI Agent API",
     version="0.1.0",
     description="Smart Garage Customer AI Agent — plug-and-play API",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

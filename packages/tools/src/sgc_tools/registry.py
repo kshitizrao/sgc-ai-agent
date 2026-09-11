@@ -65,6 +65,16 @@ def create_registry() -> ToolRegistry:
         TriageEmergencyTool,
     )
     from sgc_tools.agent_meta.session_tools import CreateSessionNoteTool
+    from sgc_tools.pikpart.pikpart_tools import (
+        FetchPikpartServicesTool,
+        FetchPikpartCustomersTool,
+        FetchPikpartCustomerVehiclesTool,
+        FetchPikpartVehicleServicesTool,
+        FetchPikpartBookingServicesTool,
+        FetchPikpartBookingsTool,
+        FetchPikpartVehicleBrandsTool,
+        FetchPikpartVehicleCategoriesTool,
+    )
 
     registry = ToolRegistry()
     for tool_cls in [
@@ -84,6 +94,14 @@ def create_registry() -> ToolRegistry:
         DiagnoseSymptomTool,
         GetPredictiveMaintenanceTool,
         CreateSessionNoteTool,
+        FetchPikpartServicesTool,
+        FetchPikpartCustomersTool,
+        FetchPikpartCustomerVehiclesTool,
+        FetchPikpartVehicleServicesTool,
+        FetchPikpartBookingServicesTool,
+        FetchPikpartBookingsTool,
+        FetchPikpartVehicleBrandsTool,
+        FetchPikpartVehicleCategoriesTool,
     ]:
         registry.register(tool_cls())
     return registry

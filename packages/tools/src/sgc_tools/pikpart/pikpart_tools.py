@@ -1,3 +1,4 @@
+import httpx
 from sqlalchemy import text
 from sgc_shared.types import ToolResult
 from sgc_tools.registry import BaseTool
@@ -105,3 +106,23 @@ class FetchPikpartVehicleCategoriesTool(BaseTool):
             success=True,
             data=[dict(row._mapping) for row in result]
         )
+
+class FetchPikpartVehicleDetailsTool(BaseTool):
+    name = "fetch_pikpart_vehicle_details"
+    description = "Fetch detailed vehicle information from Pikpart API using a vehicle registration number (e.g., DL10CT9251)"
+
+    async def execute(self, session, vehicle_number: str, **kwargs):
+        url = "https://uatapi.pikpart.com/api/Customer/searchVehicles"
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(url, json={"vehicle_number": vehicle_number})
+                response.raise_for_status()
+                data = response.json()
+            return ToolResult(
+                tool_name=self.name,
+                success=True,
+                data=data
+            )
+        except Exception as e:
+            return ToolResult(tool_name=self.name, success=False, error=str(e))
+

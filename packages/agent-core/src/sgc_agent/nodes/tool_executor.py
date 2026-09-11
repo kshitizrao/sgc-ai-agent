@@ -16,6 +16,7 @@ INTENT_TOOL_MAP: dict[IntentType, str] = {
     IntentType.RSA: "triage_emergency",
     IntentType.GARAGE_MATCH: "recommend_garages",
     IntentType.DIAGNOSTICS: "diagnose_symptom",
+    IntentType.VEHICLE_INFO: "fetch_pikpart_vehicle_details",
 }
 
 
@@ -82,6 +83,11 @@ async def execute_intent_tools(
             "fuel_type": customer.fuel_type,
             "mileage_km": customer.mileage_km,
         }
+    elif tool_name == "fetch_pikpart_vehicle_details":
+        import re
+        match = re.search(r'[A-Z]{2}[0-9]{1,2}[A-Z0-9]{0,3}[0-9]{4}', message.replace(" ", "").upper())
+        vehicle_num = match.group(0) if match else ""
+        kwargs = {"vehicle_number": vehicle_num}
 
     result = await registry.invoke(tool_name, session, **kwargs)
     tool_data = {

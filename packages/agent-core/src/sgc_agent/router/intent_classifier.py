@@ -9,6 +9,7 @@ INTENT_KEYWORDS: dict[IntentType, list[str]] = {
     IntentType.GARAGE_MATCH: ["garage", "workshop", "near me", "recommend", "pickup", "best garage"],
     IntentType.DIAGNOSTICS: ["vibrat", "noise", "smoke", "problem", "issue", "symptom", "diagnos", "sluggish"],
     IntentType.GENERAL_FAQ: ["hello", "hi", "help", "thank"],
+    IntentType.VEHICLE_INFO: ["car", "vehicle", "reg no", "registration", "details"],
 }
 
 

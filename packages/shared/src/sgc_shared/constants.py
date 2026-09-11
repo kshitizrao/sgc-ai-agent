@@ -10,6 +10,7 @@ class IntentType(StrEnum):
     GARAGE_MATCH = "garage_match"
     DIAGNOSTICS = "diagnostics"
     GENERAL_FAQ = "general_faq"
+    VEHICLE_INFO = "vehicle_info"
 
 
 class TaskType(StrEnum):

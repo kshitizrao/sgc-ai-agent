@@ -120,9 +120,10 @@ async def lifespan(app: FastAPI):
         logger.error("Failed to connect to sgc_agent: %s", e)
 
     # ── 3. Start MCP server ────────────────────────────────────────────
-    _mcp_process = _start_mcp_server()
-    if _mcp_process:
-        await asyncio.sleep(2)  # Give MCP server time to start
+    if settings.start_local_mcp_server:
+        _mcp_process = _start_mcp_server()
+        if _mcp_process:
+            await asyncio.sleep(2)  # Give MCP server time to start
 
     # ── 4. Connect MCP client ──────────────────────────────────────────
     try:

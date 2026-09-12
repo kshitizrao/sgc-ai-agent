@@ -43,7 +43,21 @@ services:
           devices:
             - driver: nvidia
               count: 1
-              capabilities: [gpu]
+  mcp-server:
+    build:
+      context: ..
+      dockerfile: apps/agent-api/Dockerfile
+    command: ["uv", "run", "--package", "sgc-mcp-server", "python", "-m", "sgc_mcp.server"]
+    restart: always
+    ports:
+      - "8001:8001"
+    environment:
+      SGC_MCP_PORT: "8001"
+      SGC_MCP_HOST: "0.0.0.0"
+      SG_AI_DATABASE_URL: postgresql+asyncpg://${SG_AI_POSTGRES_USER:-sgc}:${SG_AI_POSTGRES_PASSWORD:-sgc}@postgres:5432/${SG_AI_POSTGRES_DB:-sgc_agent}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   agent-api:
     build:
@@ -58,11 +72,15 @@ services:
       SG_AI_REDIS_URL: redis://redis:6379/0
       SG_AI_OLLAMA_BASE_URL: http://ollama:11434
       SG_AI_DEFAULT_LLM_MODEL: ollama/llama3.1:8b
+      SG_AI_MCP_SERVER_URL: http://mcp-server:8001/sse
+      SG_AI_START_LOCAL_MCP_SERVER: "false"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
+      mcp-server:
+        condition: service_started
 
 volumes:
   pgdata:

@@ -8,7 +8,7 @@ COPY pyproject.toml .
 COPY packages/ packages/
 COPY apps/agent-api/ apps/agent-api/
 
-RUN uv sync --package sgc-agent-api
+RUN uv sync --package sgc-agent-api --package sgc-mcp-server
 
 EXPOSE 8000
 

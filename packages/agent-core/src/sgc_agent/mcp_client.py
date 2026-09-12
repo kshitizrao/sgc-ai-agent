@@ -32,7 +32,7 @@ class MCPClient:
 
     def __init__(self, server_url: str | None = None):
         settings = get_settings()
-        self._server_url = server_url or f"http://localhost:{settings.mcp_port}/sse"
+        self._server_url = server_url or settings.mcp_server_url
         self._session: ClientSession | None = None
         self._read_stream = None
         self._write_stream = None

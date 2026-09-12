@@ -109,13 +109,14 @@ class FetchPikpartVehicleCategoriesTool(BaseTool):
 
 class FetchPikpartVehicleDetailsTool(BaseTool):
     name = "fetch_pikpart_vehicle_details"
-    description = "Fetch detailed vehicle information from Pikpart API using a vehicle registration number (e.g., DL10CT9251)"
+    description = "Fetch detailed vehicle information from Pikpart API using a vehicle registration number (e.g., DL10CT9251) and an auth token"
 
-    async def execute(self, session, vehicle_number: str, **kwargs):
+    async def execute(self, session, vehicle_number: str, auth_token: str, **kwargs):
         url = "https://uatapi.pikpart.com/api/Customer/searchVehicles"
+        headers = {"Authorization": f"Bearer {auth_token}"}
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json={"vehicle_number": vehicle_number})
+                response = await client.post(url, json={"vehicle_number": vehicle_number}, headers=headers)
                 response.raise_for_status()
                 data = response.json()
             return ToolResult(

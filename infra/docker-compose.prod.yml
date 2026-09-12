@@ -44,11 +44,11 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-  mcp-server:
+  mcp_server:
     build:
       context: ..
       dockerfile: apps/agent-api/Dockerfile
-    command: ["uv", "run", "--package", "sgc-mcp-server", "python", "-m", "sgc_mcp.server"]
+    command: ["uv", "run", "--package", "sgc-mcp-server", "sgc-mcp-server"]
     restart: always
     ports:
       - "8001:8001"
@@ -73,14 +73,14 @@ services:
       SG_AI_REDIS_URL: redis://redis:6379/0
       SG_AI_OLLAMA_BASE_URL: http://ollama:11434
       SG_AI_DEFAULT_LLM_MODEL: ollama/llama3.1:8b
-      SG_AI_MCP_SERVER_URL: http://mcp-server:8001/sse
+      SG_AI_MCP_SERVER_URL: http://mcp_server:8001/sse
       SG_AI_START_LOCAL_MCP_SERVER: "false"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-      mcp-server:
+      mcp_server:
         condition: service_started
 
 volumes:

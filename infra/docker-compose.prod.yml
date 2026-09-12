@@ -73,7 +73,7 @@ services:
       SG_AI_REDIS_URL: redis://redis:6379/0
       SG_AI_OLLAMA_BASE_URL: http://ollama:11434
       SG_AI_DEFAULT_LLM_MODEL: ollama/llama3.1:8b
-      SG_AI_MCP_SERVER_URL: http://mcp_server:8001/sse
+      SG_AI_MCP_SERVER_URL: http://mcp_server:8001/sse/
       SG_AI_START_LOCAL_MCP_SERVER: "false"
     depends_on:
       postgres:

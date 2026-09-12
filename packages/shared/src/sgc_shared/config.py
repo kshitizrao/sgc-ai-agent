@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     mcp_transport: str = "sse"
     mcp_host: str = "0.0.0.0"
     mcp_port: int = 8001
-    mcp_server_url: str = "http://localhost:8001/sse"
+    mcp_server_url: str = "http://localhost:8001/sse/"
     start_local_mcp_server: bool = True
 
     # ── Logging ────────────────────────────────────────────────────────

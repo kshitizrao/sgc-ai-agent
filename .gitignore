@@ -16,3 +16,4 @@ sdks/typescript/dist/
 .coverage
 htmlcov/
 aws_secrets.json
+docs/

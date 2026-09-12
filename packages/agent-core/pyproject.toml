@@ -8,6 +8,7 @@ dependencies = [
     "sgc-llm-providers",
     "sgc-governance",
     "sgc-tools",
+    "mcp[cli]>=1.0.0",
     "langgraph>=0.2",
     "langchain-core>=0.3",
 ]

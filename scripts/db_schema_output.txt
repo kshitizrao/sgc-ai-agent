@@ -1,0 +1,1699 @@
+﻿
+================================================================================
+TABLE: customers
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('customers_id_seq'::regclass)
+  first_name                               | character varying              | nullable=YES | default=None
+  last_name                                | character varying              | nullable=YES | default=None
+  email                                    | character varying              | nullable=YES | default=None
+  phone_number                             | character varying              | nullable=YES | default=None
+  password                                 | text                           | nullable=YES | default=None
+  is_active                                | boolean                        | nullable=YES | default=true
+  email_verified                           | boolean                        | nullable=YES | default=false
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  auth_token                               | character varying              | nullable=YES | default=None
+  image_urls                               | jsonb                          | nullable=YES | default=None
+  payment_id                               | character varying              | nullable=YES | default=None
+  device_token                             | character varying              | nullable=YES | default=None
+  is_business                              | boolean                        | nullable=YES | default=None
+  business_name                            | character varying              | nullable=YES | default=None
+  is_registered                            | boolean                        | nullable=YES | default=None
+  gst                                      | character varying              | nullable=YES | default=None
+  resource_type                            | character varying              | nullable=YES | default=None
+  bm_id                                    | integer                        | nullable=YES | default=None
+  alt_phone_number                         | character varying              | nullable=YES | default=None
+  is_approved                              | boolean                        | nullable=YES | default=None
+  is_kyc_verified                          | boolean                        | nullable=YES | default=None
+  pan_no                                   | character varying              | nullable=YES | default=None
+  aadhar                                   | character varying              | nullable=YES | default=None
+  kyc_bm_id                                | integer                        | nullable=YES | default=None
+  pan_url                                  | character varying              | nullable=YES | default=None
+  gst_url                                  | character varying              | nullable=YES | default=None
+  aadhar_url                               | character varying              | nullable=YES | default=None
+  status                                   | character varying              | nullable=YES | default=None
+  approved_by_id                           | integer                        | nullable=YES | default=None
+  approved_by_name                         | character varying              | nullable=YES | default=None
+  approved_by_phone_no                     | character varying              | nullable=YES | default=None
+  approved_by_designation                  | character varying              | nullable=YES | default=None
+  approval_remarks                         | character varying              | nullable=YES | default=None
+  shop_img_url                             | character varying              | nullable=YES | default=None
+  remarks                                  | character varying              | nullable=YES | default=None
+  updated_by_user_id                       | integer                        | nullable=YES | default=None
+  updated_by_user_type                     | character varying              | nullable=YES | default=None
+  updated_by_user_name                     | character varying              | nullable=YES | default=None
+  created_by_user_id                       | integer                        | nullable=YES | default=None
+  created_by_user_type                     | character varying              | nullable=YES | default=None
+  created_by_user_name                     | character varying              | nullable=YES | default=None
+  serve_vehicle_type                       | character varying              | nullable=YES | default=None
+  last_login                               | timestamp with time zone       | nullable=YES | default=None
+  last_logoff                              | timestamp with time zone       | nullable=YES | default=None
+  last_selected_vehicle_type               | character varying              | nullable=YES | default=None
+  last_selected_vehicle_id                 | integer                        | nullable=YES | default=None
+  last_pincode                             | character varying              | nullable=YES | default=None
+  task_status                              | character varying              | nullable=YES | default=None
+  task_status_st_dt                        | date                           | nullable=YES | default=None
+  task_status_st_tm                        | character varying              | nullable=YES | default=None
+  task_status_en_dt                        | date                           | nullable=YES | default=None
+  task_status_en_tm                        | character varying              | nullable=YES | default=None
+  last_step_count                          | integer                        | nullable=YES | default=None
+  waiting_period                           | integer                        | nullable=YES | default=None
+  pending_task                             | character varying              | nullable=YES | default=None
+  lead_type                                | character varying              | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+  opted_wa                                 | boolean                        | nullable=YES | default=true
+
+TOTAL ROWS: 136473
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 106601
+    first_name: None
+    last_name: None
+    email: None
+    phone_number: 7418204015
+    password: None
+    is_active: True
+    email_verified: False
+    createdAt: 2025-06-10 01:17:25.230000+00:00
+    updatedAt: 2025-06-10 01:17:25.230000+00:00
+    auth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZV9udW1iZXIiOiI3NDE4MjA0MDE1IiwiaWF0IjoxNzQ5NTE4MjQ1fQ....
+    image_urls: None
+    payment_id: None
+    device_token: None
+    is_business: True
+    business_name: None
+    is_registered: True
+    gst: None
+    resource_type: Customer
+    bm_id: None
+    alt_phone_number: None
+    is_approved: False
+    is_kyc_verified: False
+    pan_no: None
+    aadhar: None
+    kyc_bm_id: None
+    pan_url: None
+    gst_url: None
+    aadhar_url: None
+    status: None
+    approved_by_id: None
+    approved_by_name: None
+    approved_by_phone_no: None
+    approved_by_designation: None
+    approval_remarks: None
+    shop_img_url: None
+    remarks: None
+    updated_by_user_id: None
+    updated_by_user_type: None
+    updated_by_user_name: None
+    created_by_user_id: None
+    created_by_user_type: None
+    created_by_user_name: None
+    serve_vehicle_type: 2W
+    last_login: None
+    last_logoff: None
+    last_selected_vehicle_type: None
+    last_selected_vehicle_id: None
+    last_pincode: None
+    task_status: None
+    task_status_st_dt: None
+    task_status_st_tm: None
+    task_status_en_dt: None
+    task_status_en_tm: None
+    last_step_count: None
+    waiting_period: None
+    pending_task: None
+    lead_type: None
+    updated_by_api: None
+    opted_wa: True
+  ---
+    id: 106528
+    first_name: SUBROTO DUTTA
+    last_name: None
+    email: 
+    phone_number: 7908662540
+    password: None
+    is_active: True
+    email_verified: False
+    createdAt: 2025-06-09 11:18:11.545000+00:00
+    updatedAt: 2025-09-07 12:42:52.259000+00:00
+    auth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZV9udW1iZXIiOiI3OTA4NjYyNTQwIiwiaWF0IjoxNzQ5NDY3ODkxfQ....
+    image_urls: None
+    payment_id: None
+    device_token: None
+    is_business: False
+    business_name: None
+    is_registered: False
+    gst: None
+    resource_type: Customer
+    bm_id: None
+    alt_phone_number: None
+    is_approved: False
+    is_kyc_verified: False
+    pan_no: None
+    aadhar: None
+    kyc_bm_id: None
+    pan_url: None
+    gst_url: None
+    aadhar_url: None
+    status: None
+    approved_by_id: None
+    approved_by_name: None
+    approved_by_phone_no: None
+    approved_by_designation: None
+    approval_remarks: None
+    shop_img_url: None
+    remarks: None
+    updated_by_user_id: None
+    updated_by_user_type: None
+    updated_by_user_name: None
+    created_by_user_id: None
+    created_by_user_type: None
+    created_by_user_name: None
+    serve_vehicle_type: 2W
+    last_login: None
+    last_logoff: None
+    last_selected_vehicle_type: None
+    last_selected_vehicle_id: None
+    last_pincode: None
+    task_status: None
+    task_status_st_dt: None
+    task_status_st_tm: None
+    task_status_en_dt: None
+    task_status_en_tm: None
+    last_step_count: None
+    waiting_period: None
+    pending_task: None
+    lead_type: None
+    updated_by_api: None
+    opted_wa: True
+  ---
+    id: 138135
+    first_name: None
+    last_name: None
+    email: None
+    phone_number: 9036156881
+    password: None
+    is_active: True
+    email_verified: False
+    createdAt: 2026-07-06 05:52:36.762000+00:00
+    updatedAt: 2026-07-06 06:04:47.562000+00:00
+    auth_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwaG9uZV9udW1iZXIiOiI5MDM2MTU2ODgxIiwiaWF0IjoxNzgzMzE3MTU2fQ....
+    image_urls: None
+    payment_id: None
+    device_token: emKBDSm7TjW4--vgZclPgQ:APA91bE1b1n4UEF61IaK4OAXKiBmnbhde4nphuAcm_t5ty-yi65n8N4uCFtHJ3qNtDg0dwNV077-M...
+    is_business: False
+    business_name: None
+    is_registered: False
+    gst: None
+    resource_type: Customer
+    bm_id: None
+    alt_phone_number: None
+    is_approved: False
+    is_kyc_verified: False
+    pan_no: None
+    aadhar: None
+    kyc_bm_id: None
+    pan_url: None
+    gst_url: None
+    aadhar_url: None
+    status: None
+    approved_by_id: None
+    approved_by_name: None
+    approved_by_phone_no: None
+    approved_by_designation: None
+    approval_remarks: None
+    shop_img_url: None
+    remarks: None
+    updated_by_user_id: None
+    updated_by_user_type: None
+    updated_by_user_name: None
+    created_by_user_id: None
+    created_by_user_type: None
+    created_by_user_name: None
+    serve_vehicle_type: None
+    last_login: 2026-07-06 05:52:52.925000+00:00
+    last_logoff: None
+    last_selected_vehicle_type: 4W
+    last_selected_vehicle_id: None
+    last_pincode: None
+    task_status: None
+    task_status_st_dt: None
+    task_status_st_tm: None
+    task_status_en_dt: None
+    task_status_en_tm: None
+    last_step_count: None
+    waiting_period: None
+    pending_task: None
+    lead_type: None
+    updated_by_api: None
+    opted_wa: True
+
+================================================================================
+TABLE: services
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('services_id_seq'::regclass)
+  name                                     | character varying              | nullable=YES | default=None
+  is_active                                | boolean                        | nullable=YES | default=true
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  factor_dependent                         | boolean                        | nullable=YES | default=false
+  image_url                                | character varying              | nullable=YES | default=None
+  vehicle_type                             | character varying              | nullable=YES | default=None
+  tier_type                                | character varying              | nullable=YES | default=None
+  fuel_type                                | character varying              | nullable=YES | default=None
+  service_category_id                      | integer                        | nullable=YES | default=None
+  service_code                             | character varying              | nullable=YES | default=None
+  gst_type                                 | character varying              | nullable=YES | default=None
+  gst_rate                                 | double precision               | nullable=YES | default=None
+  banner_url                               | character varying              | nullable=YES | default=None
+  base_price                               | double precision               | nullable=YES | default=None
+  solid_bg_img                             | character varying              | nullable=YES | default=None
+  white_bg_img                             | character varying              | nullable=YES | default=None
+  service_duration                         | character varying              | nullable=YES | default=None
+  service_validity                         | character varying              | nullable=YES | default=None
+  service_recommendation                   | character varying              | nullable=YES | default=None
+  discount                                 | integer                        | nullable=YES | default=None
+  is_major                                 | boolean                        | nullable=YES | default=None
+  pikpart_owned                            | boolean                        | nullable=YES | default=None
+  serve_vehicle_type                       | character varying              | nullable=YES | default=None
+  tier1_price                              | double precision               | nullable=YES | default=None
+  tier2_price                              | double precision               | nullable=YES | default=None
+  tier3_price                              | double precision               | nullable=YES | default=None
+  tier1_discount                           | double precision               | nullable=YES | default=None
+  tier2_discount                           | double precision               | nullable=YES | default=None
+  tier3_discount                           | double precision               | nullable=YES | default=None
+  service_type                             | character varying              | nullable=YES | default=None
+  is_quick                                 | boolean                        | nullable=YES | default=None
+  body_type                                | character varying              | nullable=YES | default=None
+  tier1_visit_charge                       | double precision               | nullable=YES | default=None
+  tier2_visit_charge                       | double precision               | nullable=YES | default=None
+  tier3_visit_charge                       | double precision               | nullable=YES | default=None
+  start_engine_cc                          | integer                        | nullable=YES | default=None
+  end_engine_cc                            | integer                        | nullable=YES | default=None
+  checkpoint_id                            | integer                        | nullable=YES | default=None
+  checkpoint_name                          | character varying              | nullable=YES | default=None
+  model_name                               | character varying              | nullable=YES | default=None
+  is_recommended                           | boolean                        | nullable=YES | default=None
+  is_highlighted                           | boolean                        | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 129044
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 360
+    name: Air Filter Replacement
+    is_active: True
+    createdAt: 2022-05-02 17:30:59.749000+00:00
+    updatedAt: 2026-02-27 08:33:39.332000+00:00
+    factor_dependent: False
+    image_url: https://pikpart-testing.s3.ap-south-1.amazonaws.com/serviceWhiteBgIcon/SG%20BR%20ICON%20IMAGE%20copy...
+    vehicle_type: scooty
+    tier_type: tier2
+    fuel_type: petrol
+    service_category_id: 45
+    service_code: SC_AAA0113
+    gst_type: IGST
+    gst_rate: 18.0
+    banner_url: https://pikpart.s3.ap-south-1.amazonaws.com/Air%20Filter%20Replacement2.png
+    base_price: 50.0
+    solid_bg_img: https://pikpart.s3.ap-south-1.amazonaws.com/Air%20Filter%20Replacement1.png
+    white_bg_img: https://pikpart.s3.ap-south-1.amazonaws.com/Air%20Filter%20Replacement.png
+    service_duration: 15
+    service_validity: 10
+    service_recommendation: Every 500 kms or 1 Month (Recommended)
+    discount: 5
+    is_major: False
+    pikpart_owned: True
+    serve_vehicle_type: 2W
+    tier1_price: 50.0
+    tier2_price: 50.0
+    tier3_price: 40.0
+    tier1_discount: 5.0
+    tier2_discount: 5.0
+    tier3_discount: 5.0
+    service_type: Service
+    is_quick: False
+    body_type: 
+    tier1_visit_charge: 0.0
+    tier2_visit_charge: 0.0
+    tier3_visit_charge: 0.0
+    start_engine_cc: 100
+    end_engine_cc: 220
+    checkpoint_id: None
+    checkpoint_name: None
+    model_name: Activa 125 BS-VI
+    is_recommended: None
+    is_highlighted: None
+    updated_by_api: None
+  ---
+    id: 7492
+    name: Air Filter Replacement
+    is_active: True
+    createdAt: 2025-07-26 11:04:23.321000+00:00
+    updatedAt: 2026-02-27 08:33:39.332000+00:00
+    factor_dependent: False
+    image_url: None
+    vehicle_type: bike
+    tier_type: None
+    fuel_type: petrol
+    service_category_id: 45
+    service_code: SC_AAA0113
+    gst_type: None
+    gst_rate: 18.0
+    banner_url: https://pikpart.s3.ap-south-1.amazonaws.com/Air%20Filter%20Replacement2.png
+    base_price: 50.0
+    solid_bg_img: https://pikpart.s3.ap-south-1.amazonaws.com/Air%20Filter%20Replacement1.png
+    white_bg_img: https://pikpart.s3.ap-south-1.amazonaws.com/Air%20Filter%20Replacement.png
+    service_duration: 15
+    service_validity: 10
+    service_recommendation: Every 500 kms or 1 Month (Recommended)
+    discount: None
+    is_major: None
+    pikpart_owned: True
+    serve_vehicle_type: 2W
+    tier1_price: 50.0
+    tier2_price: 20.0
+    tier3_price: 20.0
+    tier1_discount: 5.0
+    tier2_discount: 5.0
+    tier3_discount: 5.0
+    service_type: Service
+    is_quick: False
+    body_type: 
+    tier1_visit_charge: 0.0
+    tier2_visit_charge: 0.0
+    tier3_visit_charge: 0.0
+    start_engine_cc: 221
+    end_engine_cc: 550
+    checkpoint_id: None
+    checkpoint_name: None
+    model_name: Bullet 500
+    is_recommended: None
+    is_highlighted: None
+    updated_by_api: None
+  ---
+    id: 8480
+    name: Air Filter Replacement 
+    is_active: True
+    createdAt: 2025-09-01 10:43:44.818000+00:00
+    updatedAt: 2026-02-27 08:33:39.475000+00:00
+    factor_dependent: False
+    image_url: None
+    vehicle_type: bike
+    tier_type: tier2
+    fuel_type: petrol
+    service_category_id: 17
+    service_code: SC_AAA0114
+    gst_type: None
+    gst_rate: 18.0
+    banner_url: None
+    base_price: 20.0
+    solid_bg_img: None
+    white_bg_img: None
+    service_duration: None
+    service_validity: None
+    service_recommendation: None
+    discount: None
+    is_major: False
+    pikpart_owned: False
+    serve_vehicle_type: 2W
+    tier1_price: 0.0
+    tier2_price: 0.0
+    tier3_price: 0.0
+    tier1_discount: 0.0
+    tier2_discount: 0.0
+    tier3_discount: 0.0
+    service_type: Service
+    is_quick: None
+    body_type: None
+    tier1_visit_charge: 0.0
+    tier2_visit_charge: 0.0
+    tier3_visit_charge: 0.0
+    start_engine_cc: 100
+    end_engine_cc: 200
+    checkpoint_id: None
+    checkpoint_name: None
+    model_name: None
+    is_recommended: None
+    is_highlighted: None
+    updated_by_api: None
+
+================================================================================
+TABLE: customer_vehicles
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('customer_vehicles_id_seq'::regclass)
+  vehicle_type                             | character varying              | nullable=YES | default=None
+  vehicle_no                               | character varying              | nullable=YES | default=None
+  customer_id                              | integer                        | nullable=NO  | default=None
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  make                                     | character varying              | nullable=YES | default=None
+  model                                    | character varying              | nullable=YES | default=None
+  purchased_on                             | timestamp with time zone       | nullable=YES | default=None
+  insurance_expiry_date                    | timestamp with time zone       | nullable=YES | default=None
+  pollution_expiry_date                    | timestamp with time zone       | nullable=YES | default=None
+  next_service_date                        | date                           | nullable=YES | default=None
+  fuel_type                                | character varying              | nullable=YES | default=None
+  is_active                                | boolean                        | nullable=YES | default=true
+  engine_cc                                | integer                        | nullable=YES | default=None
+  rc_number                                | character varying              | nullable=YES | default=None
+  chasis_number                            | character varying              | nullable=YES | default=None
+  insurance_policy_number                  | character varying              | nullable=YES | default=None
+  insurance_company                        | character varying              | nullable=YES | default=None
+  vehicle_id                               | integer                        | nullable=YES | default=None
+  vehicle_model_type                       | character varying              | nullable=YES | default=None
+  avg_daily_run                            | character varying              | nullable=YES | default=None
+  engine_no                                | character varying              | nullable=YES | default=None
+  color                                    | character varying              | nullable=YES | default=None
+  transmission_type                        | character varying              | nullable=YES | default=None
+  year                                     | character varying              | nullable=YES | default=None
+  pucc_number                              | character varying              | nullable=YES | default=None
+  pucc_expiry_date                         | date                           | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 59038
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 12806
+    vehicle_type: scooty
+    vehicle_no: UP45W1315
+    customer_id: 30418
+    createdAt: 2023-12-06 10:38:02.917000+00:00
+    updatedAt: 2023-12-06 10:38:02.917000+00:00
+    make: TVS 
+    model: Jupitor 110
+    purchased_on: 2023-12-06 10:38:02+00:00
+    insurance_expiry_date: 2023-12-06 10:38:02+00:00
+    pollution_expiry_date: 2023-12-06 10:38:02+00:00
+    next_service_date: 2024-03-05
+    fuel_type: petrol
+    is_active: True
+    engine_cc: 9
+    rc_number: None
+    chasis_number: None
+    insurance_policy_number: None
+    insurance_company: None
+    vehicle_id: 2464
+    vehicle_model_type: 2W
+    avg_daily_run: 30
+    engine_no: None
+    color: None
+    transmission_type: None
+    year: None
+    pucc_number: None
+    pucc_expiry_date: None
+    updated_by_api: None
+  ---
+    id: 12485
+    vehicle_type: bike
+    vehicle_no: br01ak8552
+    customer_id: 16570
+    createdAt: 2023-11-27 12:49:44.904000+00:00
+    updatedAt: 2023-11-27 12:49:44.904000+00:00
+    make: Hero 
+    model: Splendor Plus
+    purchased_on: 2023-11-27 12:49:44+00:00
+    insurance_expiry_date: 2023-11-27 12:49:44+00:00
+    pollution_expiry_date: 2023-11-27 12:49:44+00:00
+    next_service_date: 2024-06-22
+    fuel_type: petrol
+    is_active: True
+    engine_cc: 8
+    rc_number: None
+    chasis_number: None
+    insurance_policy_number: None
+    insurance_company: None
+    vehicle_id: 2316
+    vehicle_model_type: 2W
+    avg_daily_run: 12
+    engine_no: None
+    color: None
+    transmission_type: None
+    year: None
+    pucc_number: None
+    pucc_expiry_date: None
+    updated_by_api: None
+  ---
+    id: 12807
+    vehicle_type: bike
+    vehicle_no: PY01BS2063
+    customer_id: 30420
+    createdAt: 2023-12-06 10:58:39.117000+00:00
+    updatedAt: 2023-12-06 10:58:39.117000+00:00
+    make: Bajaj 
+    model: Discover 100 DTSI
+    purchased_on: 2023-12-06 10:58:39+00:00
+    insurance_expiry_date: 2023-12-06 10:58:39+00:00
+    pollution_expiry_date: 2023-12-06 10:58:39+00:00
+    next_service_date: 2024-08-12
+    fuel_type: petrol
+    is_active: True
+    engine_cc: 8
+    rc_number: None
+    chasis_number: None
+    insurance_policy_number: None
+    insurance_company: None
+    vehicle_id: 2635
+    vehicle_model_type: 2W
+    avg_daily_run: 10
+    engine_no: None
+    color: None
+    transmission_type: None
+    year: None
+    pucc_number: None
+    pucc_expiry_date: None
+    updated_by_api: None
+
+================================================================================
+TABLE: vehicle_services
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('vehicle_services_id_seq'::regclass)
+  is_active                                | boolean                        | nullable=NO  | default=None
+  vehicle_model_id                         | integer                        | nullable=YES | default=None
+  model_name                               | character varying              | nullable=YES | default=None
+  transmission_type                        | character varying              | nullable=YES | default=None
+  fuel_type                                | character varying              | nullable=NO  | default=None
+  service_category_id                      | integer                        | nullable=NO  | default=None
+  service_id                               | integer                        | nullable=NO  | default=None
+  price                                    | double precision               | nullable=YES | default=None
+  discount_percent                         | double precision               | nullable=YES | default=None
+  tier_type                                | character varying              | nullable=YES | default=None
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  service_centre_id                        | integer                        | nullable=YES | default=None
+  body_type                                | character varying              | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+  created_by_user_id                       | integer                        | nullable=YES | default=None
+  created_by_user_type                     | character varying              | nullable=YES | default=None
+  created_by_user_name                     | character varying              | nullable=YES | default=None
+  updated_by_user_id                       | integer                        | nullable=YES | default=None
+  updated_by_user_type                     | character varying              | nullable=YES | default=None
+  updated_by_user_name                     | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 14762942
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 123171
+    is_active: False
+    vehicle_model_id: 8103
+    model_name: WR-V
+    transmission_type: manual
+    fuel_type: petrol
+    service_category_id: 36
+    service_id: 514
+    price: 2799.0
+    discount_percent: 0.0
+    tier_type: tier1
+    createdAt: 2025-05-16 09:56:40.492000+00:00
+    updatedAt: 2025-05-16 09:56:40.492000+00:00
+    service_centre_id: 263
+    body_type: None
+    updated_by_api: None
+    created_by_user_id: None
+    created_by_user_type: None
+    created_by_user_name: None
+    updated_by_user_id: None
+    updated_by_user_type: None
+    updated_by_user_name: None
+  ---
+    id: 95707
+    is_active: False
+    vehicle_model_id: 5240
+    model_name: CITY IVTEC
+    transmission_type: manual
+    fuel_type: cng
+    service_category_id: 39
+    service_id: 528
+    price: 26848.5
+    discount_percent: 0.0
+    tier_type: tier1
+    createdAt: 2024-12-30 08:42:26.829000+00:00
+    updatedAt: 2024-12-30 08:42:26.829000+00:00
+    service_centre_id: 231
+    body_type: None
+    updated_by_api: None
+    created_by_user_id: None
+    created_by_user_type: None
+    created_by_user_name: None
+    updated_by_user_id: None
+    updated_by_user_type: None
+    updated_by_user_name: None
+  ---
+    id: 95708
+    is_active: False
+    vehicle_model_id: 5319
+    model_name: V40
+    transmission_type: automatic
+    fuel_type: petrol
+    service_category_id: 39
+    service_id: 528
+    price: 28348.5
+    discount_percent: 0.0
+    tier_type: tier1
+    createdAt: 2024-12-30 08:42:26.853000+00:00
+    updatedAt: 2024-12-30 08:42:26.853000+00:00
+    service_centre_id: 231
+    body_type: None
+    updated_by_api: None
+    created_by_user_id: None
+    created_by_user_type: None
+    created_by_user_name: None
+    updated_by_user_id: None
+    updated_by_user_type: None
+    updated_by_user_name: None
+
+================================================================================
+TABLE: service_centre_services
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('service_centre_services_id_seq'::regclass)
+  is_active                                | boolean                        | nullable=YES | default=true
+  service_id                               | integer                        | nullable=NO  | default=None
+  service_centres_id                       | integer                        | nullable=NO  | default=None
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  engine_cc_id                             | integer                        | nullable=YES | default=None
+  start_engine_cc                          | integer                        | nullable=YES | default=None
+  end_engine_cc                            | integer                        | nullable=YES | default=None
+  model_name                               | character varying              | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 3200424
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 1561727
+    is_active: True
+    service_id: 85444
+    service_centres_id: 226
+    createdAt: 2026-01-12 11:39:33.502000+00:00
+    updatedAt: 2026-01-12 11:39:33.502000+00:00
+    engine_cc_id: None
+    start_engine_cc: 100
+    end_engine_cc: 220
+    model_name: Centuro NXT
+    updated_by_api: None
+  ---
+    id: 2179687
+    is_active: True
+    service_id: 107837
+    service_centres_id: 240
+    createdAt: 2026-01-21 07:11:24.913000+00:00
+    updatedAt: 2026-01-21 07:11:24.913000+00:00
+    engine_cc_id: None
+    start_engine_cc: 100
+    end_engine_cc: 220
+    model_name: Suzuki Access 125
+    updated_by_api: None
+  ---
+    id: 1561736
+    is_active: True
+    service_id: 86922
+    service_centres_id: 193
+    createdAt: 2026-01-12 11:39:33.530000+00:00
+    updatedAt: 2026-01-12 11:39:33.530000+00:00
+    engine_cc_id: None
+    start_engine_cc: 100
+    end_engine_cc: 220
+    model_name: Glamour 125
+    updated_by_api: None
+
+================================================================================
+TABLE: booking_services
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('booking_services_id_seq'::regclass)
+  booking_id                               | integer                        | nullable=YES | default=None
+  service_id                               | integer                        | nullable=YES | default=None
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  status                                   | character varying              | nullable=YES | default='open'::character varying
+  eta                                      | timestamp with time zone       | nullable=YES | default=None
+  service_centre_service_id                | integer                        | nullable=YES | default=None
+  qty                                      | integer                        | nullable=YES | default=1
+  checkpoint_id                            | integer                        | nullable=YES | default=None
+  customer_amc_id                          | integer                        | nullable=YES | default=None
+  claim_count                              | integer                        | nullable=YES | default=None
+  discount_percent                         | real                           | nullable=YES | default=None
+  discount                                 | real                           | nullable=YES | default=None
+  sub_checkpoint_id                        | integer                        | nullable=YES | default=None
+  status_id                                | integer                        | nullable=YES | default=None
+  claim_id                                 | integer                        | nullable=YES | default=None
+  customer_approval_status                 | character varying              | nullable=YES | default=None
+  surveyor_approval_status                 | character varying              | nullable=YES | default=None
+  customer_approval_status_id              | integer                        | nullable=YES | default=None
+  surveyor_approval_status_id              | integer                        | nullable=YES | default=None
+  quotation_id                             | integer                        | nullable=YES | default=None
+  quotation_item_id                        | integer                        | nullable=YES | default=None
+  updated_by_user_id                       | integer                        | nullable=YES | default=None
+  updated_by_user_type                     | character varying              | nullable=YES | default=None
+  updated_by_user_name                     | character varying              | nullable=YES | default=None
+  created_by_user_id                       | integer                        | nullable=YES | default=None
+  created_by_user_type                     | character varying              | nullable=YES | default=None
+  created_by_user_name                     | character varying              | nullable=YES | default=None
+  approved_percent                         | integer                        | nullable=YES | default=None
+  pikpart_approval_status                  | character varying              | nullable=YES | default=None
+  pikpart_approval_status_id               | integer                        | nullable=YES | default=None
+  before_image                             | character varying              | nullable=YES | default=None
+  after_image                              | character varying              | nullable=YES | default=None
+  checkpoint_name                          | character varying              | nullable=YES | default=None
+  name                                     | character varying              | nullable=YES | default=None
+  tax_rate                                 | integer                        | nullable=YES | default=None
+  selling_price                            | real                           | nullable=YES | default=None
+  driver_inspection                        | boolean                        | nullable=YES | default=None
+  item_type                                | character varying              | nullable=YES | default=None
+  before_video                             | character varying              | nullable=YES | default=None
+  after_video                              | character varying              | nullable=YES | default=None
+  is_viewed                                | boolean                        | nullable=YES | default=None
+  is_viewed_date                           | timestamp without time zone    | nullable=YES | default=None
+  approved_selling_price                   | real                           | nullable=YES | default=None
+  recommendation_type                      | character varying              | nullable=YES | default=None
+  symptom_id                               | integer                        | nullable=YES | default=None
+  symptom_name                             | character varying              | nullable=YES | default=None
+  solution_name                            | character varying              | nullable=YES | default=None
+  solution_id                              | integer                        | nullable=YES | default=None
+  catalogue_id                             | integer                        | nullable=YES | default=None
+  suggestion_id                            | integer                        | nullable=YES | default=None
+  suggestion_name                          | character varying              | nullable=YES | default=None
+  customer_approval_date                   | timestamp with time zone       | nullable=YES | default=None
+  customer_approval_time                   | character varying              | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 51403
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 39343
+    booking_id: 31439
+    service_id: 14818
+    createdAt: 2026-01-12 05:21:47.565000+00:00
+    updatedAt: 2026-01-12 05:21:47.565000+00:00
+    status: pending
+    eta: None
+    service_centre_service_id: 2919570
+    qty: 1
+    checkpoint_id: 75
+    customer_amc_id: None
+    claim_count: None
+    discount_percent: 26.0
+    discount: 1092.0
+    sub_checkpoint_id: None
+    status_id: None
+    claim_id: None
+    customer_approval_status: approved
+    surveyor_approval_status: pending
+    customer_approval_status_id: 8
+    surveyor_approval_status_id: None
+    quotation_id: None
+    quotation_item_id: None
+    updated_by_user_id: 266
+    updated_by_user_type: ServiceCentre
+    updated_by_user_name: Kabi Garage
+    created_by_user_id: 266
+    created_by_user_type: ServiceCentre
+    created_by_user_name: Kabi Garage
+    approved_percent: 0
+    pikpart_approval_status: pending
+    pikpart_approval_status_id: None
+    before_image: None
+    after_image: None
+    checkpoint_name: Car Body Treatment
+    name: Basic Service
+    tax_rate: 18
+    selling_price: 4200.0
+    driver_inspection: True
+    item_type: Package
+    before_video: None
+    after_video: None
+    is_viewed: False
+    is_viewed_date: None
+    approved_selling_price: 4200.0
+    recommendation_type: None
+    symptom_id: None
+    symptom_name: None
+    solution_name: None
+    solution_id: None
+    catalogue_id: None
+    suggestion_id: None
+    suggestion_name: None
+    customer_approval_date: None
+    customer_approval_time: None
+    updated_by_api: None
+  ---
+    id: 39344
+    booking_id: 31441
+    service_id: 108669
+    createdAt: 2026-01-12 05:29:02.459000+00:00
+    updatedAt: 2026-01-12 05:29:02.459000+00:00
+    status: pending
+    eta: None
+    service_centre_service_id: 5873548
+    qty: 1
+    checkpoint_id: 75
+    customer_amc_id: None
+    claim_count: None
+    discount_percent: 10.0
+    discount: 44.5
+    sub_checkpoint_id: None
+    status_id: None
+    claim_id: None
+    customer_approval_status: approved
+    surveyor_approval_status: pending
+    customer_approval_status_id: 8
+    surveyor_approval_status_id: None
+    quotation_id: None
+    quotation_item_id: None
+    updated_by_user_id: 266
+    updated_by_user_type: ServiceCentre
+    updated_by_user_name: Kabi Garage
+    created_by_user_id: 266
+    created_by_user_type: ServiceCentre
+    created_by_user_name: Kabi Garage
+    approved_percent: 0
+    pikpart_approval_status: pending
+    pikpart_approval_status_id: None
+    before_image: None
+    after_image: None
+    checkpoint_name: Car Body Treatment
+    name: Was--
+    tax_rate: 18
+    selling_price: 445.0
+    driver_inspection: True
+    item_type: Service
+    before_video: None
+    after_video: None
+    is_viewed: False
+    is_viewed_date: None
+    approved_selling_price: 445.0
+    recommendation_type: None
+    symptom_id: None
+    symptom_name: None
+    solution_name: None
+    solution_id: None
+    catalogue_id: None
+    suggestion_id: None
+    suggestion_name: None
+    customer_approval_date: None
+    customer_approval_time: None
+    updated_by_api: None
+  ---
+    id: 39345
+    booking_id: 31441
+    service_id: 108741
+    createdAt: 2026-01-12 05:29:02.480000+00:00
+    updatedAt: 2026-01-12 05:29:02.480000+00:00
+    status: pending
+    eta: None
+    service_centre_service_id: 5896413
+    qty: 1
+    checkpoint_id: 75
+    customer_amc_id: None
+    claim_count: None
+    discount_percent: 10.0
+    discount: 10.0
+    sub_checkpoint_id: None
+    status_id: None
+    claim_id: None
+    customer_approval_status: approved
+    surveyor_approval_status: pending
+    customer_approval_status_id: 8
+    surveyor_approval_status_id: None
+    quotation_id: None
+    quotation_item_id: None
+    updated_by_user_id: 266
+    updated_by_user_type: ServiceCentre
+    updated_by_user_name: Kabi Garage
+    created_by_user_id: 266
+    created_by_user_type: ServiceCentre
+    created_by_user_name: Kabi Garage
+    approved_percent: 0
+    pikpart_approval_status: pending
+    pikpart_approval_status_id: None
+    before_image: None
+    after_image: None
+    checkpoint_name: Car Body Treatment
+    name: New S
+    tax_rate: 18
+    selling_price: 100.0
+    driver_inspection: True
+    item_type: service
+    before_video: None
+    after_video: None
+    is_viewed: False
+    is_viewed_date: None
+    approved_selling_price: 100.0
+    recommendation_type: None
+    symptom_id: None
+    symptom_name: None
+    solution_name: None
+    solution_id: None
+    catalogue_id: None
+    suggestion_id: None
+    suggestion_name: None
+    customer_approval_date: None
+    customer_approval_time: None
+    updated_by_api: None
+
+================================================================================
+TABLE: bookings
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('bookings_id_seq'::regclass)
+  booking_datetime                         | date                           | nullable=YES | default=None
+  odometer                                 | character varying              | nullable=YES | default=None
+  pickup_facility                          | boolean                        | nullable=NO  | default=false
+  drop_facility                            | boolean                        | nullable=NO  | default=false
+  service_centre_id                        | integer                        | nullable=YES | default=None
+  customer_id                              | integer                        | nullable=NO  | default=None
+  customer_vehicle_id                      | integer                        | nullable=YES | default=None
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  is_quick                                 | boolean                        | nullable=NO  | default=false
+  price                                    | real                           | nullable=YES | default='0'::double precision
+  service_type_id                          | integer                        | nullable=YES | default=None
+  city                                     | character varying              | nullable=YES | default=None
+  status                                   | character varying              | nullable=YES | default='requested'::character varying
+  centre_comment                           | text                           | nullable=YES | default=None
+  customer_comment                         | text                           | nullable=YES | default=None
+  service_category_id                      | integer                        | nullable=YES | default=None
+  address_id                               | integer                        | nullable=YES | default=None
+  camera_url                               | character varying              | nullable=YES | default=None
+  dock                                     | character varying              | nullable=YES | default=None
+  assigned_users                           | ARRAY                          | nullable=YES | default=None
+  images                                   | ARRAY                          | nullable=YES | default=None
+  questionnaire                            | jsonb                          | nullable=YES | default=None
+  centre_service_type_id                   | integer                        | nullable=YES | default=None
+  estimated_price                          | real                           | nullable=YES | default=0
+  payment_status                           | character varying              | nullable=YES | default=None
+  booking_slot                             | time without time zone         | nullable=YES | default=None
+  customer_amc_id                          | integer                        | nullable=YES | default=None
+  claim_count                              | character varying              | nullable=YES | default=None
+  confirmed_date                           | timestamp with time zone       | nullable=YES | default=None
+  confirmed_slot                           | time without time zone         | nullable=YES | default=None
+  service_start_date                       | timestamp with time zone       | nullable=YES | default=None
+  service_end_date                         | timestamp with time zone       | nullable=YES | default=None
+  pick_settled                             | boolean                        | nullable=NO  | default=false
+  drop_settled                             | boolean                        | nullable=NO  | default=false
+  booking_duration                         | timestamp with time zone       | nullable=YES | default=None
+  is_insurance                             | boolean                        | nullable=NO  | default=false
+  is_rc                                    | boolean                        | nullable=NO  | default=false
+  is_puc                                   | boolean                        | nullable=NO  | default=false
+  fuel_percent                             | integer                        | nullable=YES | default=None
+  status_id                                | integer                        | nullable=YES | default=None
+  payment_status_id                        | integer                        | nullable=YES | default=None
+  jobcard_number                           | character varying              | nullable=YES | default=None
+  stream_id                                | integer                        | nullable=YES | default=None
+  stream_url                               | character varying              | nullable=YES | default=None
+  bm_id                                    | integer                        | nullable=YES | default=None
+  order_date                               | date                           | nullable=YES | default=None
+  bm_visit_id                              | integer                        | nullable=YES | default=None
+  pickup_done                              | boolean                        | nullable=NO  | default=false
+  drop_done                                | boolean                        | nullable=NO  | default=false
+  supervisor_checked_ok                    | boolean                        | nullable=NO  | default=false
+  remark                                   | character varying              | nullable=YES | default=None
+  estimation_id                            | integer                        | nullable=YES | default=None
+  initiated_by_app                         | character varying              | nullable=YES | default=None
+  vehicle_no                               | character varying              | nullable=YES | default=None
+  promised_delivery_date                   | date                           | nullable=YES | default=None
+  conflict_reason                          | character varying              | nullable=YES | default=None
+  gst_invoice                              | boolean                        | nullable=NO  | default=false
+  gst                                      | character varying              | nullable=YES | default=None
+  business_name                            | character varying              | nullable=YES | default=None
+  gst_address                              | character varying              | nullable=YES | default=None
+  pickup_address_id                        | integer                        | nullable=YES | default=None
+  in_date                                  | date                           | nullable=YES | default=None
+  in_time                                  | character varying              | nullable=YES | default=None
+  assigned_supervisors                     | ARRAY                          | nullable=YES | default=None
+  garage_fuel_percent                      | integer                        | nullable=YES | default=None
+  garage_remark                            | character varying              | nullable=YES | default=None
+  drop_address_id                          | integer                        | nullable=YES | default=None
+  gate_pass_pdf_link                       | character varying              | nullable=YES | default=None
+  gate_pass_qr_link                        | character varying              | nullable=YES | default=None
+  estimation_url                           | character varying              | nullable=YES | default=None
+  created_by_user_id                       | integer                        | nullable=YES | default=None
+  created_by_user_type                     | character varying              | nullable=YES | default=None
+  created_by_user_name                     | character varying              | nullable=YES | default=None
+  updated_by_user_id                       | integer                        | nullable=YES | default=None
+  updated_by_user_type                     | character varying              | nullable=YES | default=None
+  updated_by_user_name                     | character varying              | nullable=YES | default=None
+  out_date                                 | date                           | nullable=YES | default=None
+  out_time                                 | character varying              | nullable=YES | default=None
+  service_lead_id                          | integer                        | nullable=YES | default=None
+  etd                                      | date                           | nullable=YES | default=None
+  applied_coupon_code                      | character varying              | nullable=YES | default=None
+  applied_coupon_discount                  | real                           | nullable=YES | default=None
+  pickup_driver_assign_date                | date                           | nullable=YES | default=None
+  pickup_driver_assign_time                | character varying              | nullable=YES | default=None
+  pickup_schedule_date                     | date                           | nullable=YES | default=None
+  pickup_schedule_time                     | character varying              | nullable=YES | default=None
+  pikpart_received                         | real                           | nullable=YES | default=None
+  paid_total                               | real                           | nullable=YES | default=None
+  promised_delivery_time                   | character varying              | nullable=YES | default=None
+  cancelled_by                             | character varying              | nullable=YES | default=None
+  cancel_reason                            | character varying              | nullable=YES | default=None
+  cancel_reason_remark                     | character varying              | nullable=YES | default=None
+  refund_type                              | character varying              | nullable=YES | default=None
+  refund_amount                            | real                           | nullable=YES | default=None
+  refund_remark                            | character varying              | nullable=YES | default=None
+  pickup_fuel_percent                      | integer                        | nullable=YES | default=None
+  drop_fuel_percent                        | integer                        | nullable=YES | default=None
+  pickup_odometer                          | character varying              | nullable=YES | default=None
+  drop_odometer                            | character varying              | nullable=YES | default=None
+  inspection_update_date                   | timestamp with time zone       | nullable=YES | default=None
+  wip_start_date                           | timestamp with time zone       | nullable=YES | default=None
+  first_name                               | character varying              | nullable=YES | default=None
+  last_name                                | character varying              | nullable=YES | default=None
+  phone_number                             | character varying              | nullable=YES | default=None
+  inspection_date                          | date                           | nullable=YES | default=None
+  inspection_time                          | character varying              | nullable=YES | default=None
+  wip_date                                 | date                           | nullable=YES | default=None
+  wip_time                                 | character varying              | nullable=YES | default=None
+  ready_date                               | date                           | nullable=YES | default=None
+  ready_time                               | character varying              | nullable=YES | default=None
+  payment_due_date                         | date                           | nullable=YES | default=None
+  payment_due_time                         | character varying              | nullable=YES | default=None
+  payment_date                             | date                           | nullable=YES | default=None
+  payment_time                             | character varying              | nullable=YES | default=None
+  drop_driver_assign_date                  | date                           | nullable=YES | default=None
+  drop_driver_assign_time                  | character varying              | nullable=YES | default=None
+  approval_cust_sign                       | character varying              | nullable=YES | default=None
+  approval_cust_otp                        | character varying              | nullable=YES | default=None
+  estimation_date                          | date                           | nullable=YES | default=None
+  estimation_time                          | character varying              | nullable=YES | default=None
+  complete_date                            | date                           | nullable=YES | default=None
+  complete_time                            | character varying              | nullable=YES | default=None
+  estimation_withc_url                     | character varying              | nullable=YES | default=None
+  jobcard_location                         | character varying              | nullable=YES | default=None
+  task_status                              | character varying              | nullable=YES | default=None
+  task_status_st_dt                        | date                           | nullable=YES | default=None
+  task_status_st_tm                        | character varying              | nullable=YES | default=None
+  task_status_en_dt                        | date                           | nullable=YES | default=None
+  task_status_en_tm                        | character varying              | nullable=YES | default=None
+  last_wa_sent_customer                    | timestamp with time zone       | nullable=YES | default=None
+  last_wa_sent_garage                      | timestamp with time zone       | nullable=YES | default=None
+  last_step_count                          | integer                        | nullable=YES | default=None
+  waiting_period                           | integer                        | nullable=YES | default=None
+  healthcheck_remark                       | character varying              | nullable=YES | default=None
+  recommendation_type                      | character varying              | nullable=YES | default=None
+  solution_updated                         | boolean                        | nullable=NO  | default=false
+  booking_type                             | character varying              | nullable=YES | default=None
+  adjusted_amount                          | double precision               | nullable=YES | default='0'::double precision
+  work_order_url                           | character varying              | nullable=YES | default=None
+  inspection_pdf_url                       | character varying              | nullable=YES | default=None
+  lead_status                              | character varying              | nullable=YES | default=None
+  next_follow_up_date                      | date                           | nullable=YES | default=None
+  next_follow_up_time                      | character varying              | nullable=YES | default=None
+  reserve_remark                           | character varying              | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+  assigned_by_id                           | integer                        | nullable=YES | default=None
+  assigned_by_name                         | character varying              | nullable=YES | default=None
+  assigned_to_id                           | integer                        | nullable=YES | default=None
+  assigned_to_name                         | character varying              | nullable=YES | default=None
+  assigned_to_date                         | date                           | nullable=YES | default=None
+  assigned_to_time                         | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 40228
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 30760
+    booking_datetime: 2025-12-26
+    odometer: 121382
+    pickup_facility: False
+    drop_facility: False
+    service_centre_id: 210
+    customer_id: 123016
+    customer_vehicle_id: 48055
+    createdAt: 2025-12-26 06:05:17.667000+00:00
+    updatedAt: 2026-01-13 10:13:15.710000+00:00
+    is_quick: False
+    price: 13000.0
+    service_type_id: None
+    city: None
+    status: completed
+    centre_comment: None
+    customer_comment: None
+    service_category_id: None
+    address_id: 58973
+    camera_url: www.bay1.com
+    dock: Bay  1
+    assigned_users: [268]
+    images: None
+    questionnaire: None
+    centre_service_type_id: None
+    estimated_price: 13000.0
+    payment_status: paid
+    booking_slot: 11:35:17
+    customer_amc_id: None
+    claim_count: None
+    confirmed_date: 2025-12-26 00:00:00+00:00
+    confirmed_slot: 13:00:00
+    service_start_date: None
+    service_end_date: 2026-01-03 10:11:53+00:00
+    pick_settled: False
+    drop_settled: False
+    booking_duration: None
+    is_insurance: False
+    is_rc: False
+    is_puc: False
+    fuel_percent: 30
+    status_id: 9
+    payment_status_id: 12
+    jobcard_number: SA00175-2612-JA057
+    stream_id: None
+    stream_url: None
+    bm_id: None
+    order_date: 2025-12-26
+    bm_visit_id: None
+    pickup_done: False
+    drop_done: False
+    supervisor_checked_ok: True
+    remark: None
+    estimation_id: None
+    initiated_by_app: None
+    vehicle_no: MP14CB2790
+    promised_delivery_date: 2026-01-03
+    conflict_reason: None
+    gst_invoice: False
+    gst: None
+    business_name: None
+    gst_address: false
+    pickup_address_id: 58973
+    in_date: 2025-12-26
+    in_time: 11:35:44
+    assigned_supervisors: [639]
+    garage_fuel_percent: None
+    garage_remark: None
+    drop_address_id: 58973
+    gate_pass_pdf_link: None
+    gate_pass_qr_link: None
+    estimation_url: None
+    created_by_user_id: 210
+    created_by_user_type: ServiceCentre
+    created_by_user_name: Panwar Motors
+    updated_by_user_id: 210
+    updated_by_user_type: ServiceCentre
+    updated_by_user_name: Panwar Motors
+    out_date: None
+    out_time: None
+    service_lead_id: None
+    etd: None
+    applied_coupon_code: None
+    applied_coupon_discount: 0.0
+    pickup_driver_assign_date: None
+    pickup_driver_assign_time: None
+    pickup_schedule_date: None
+    pickup_schedule_time: None
+    pikpart_received: None
+    paid_total: 13000.0
+    promised_delivery_time: 2026-01-03T10:11:29.571Z
+    cancelled_by: None
+    cancel_reason: None
+    cancel_reason_remark: None
+    refund_type: None
+    refund_amount: None
+    refund_remark: None
+    pickup_fuel_percent: None
+    drop_fuel_percent: None
+    pickup_odometer: None
+    drop_odometer: None
+    inspection_update_date: 2025-12-26 06:05:49+00:00
+    wip_start_date: None
+    first_name: MR. RAM KRIPAL SINGH  SISODIYA
+    last_name: 
+    phone_number: 9098295664
+    inspection_date: None
+    inspection_time: None
+    wip_date: None
+    wip_time: None
+    ready_date: None
+    ready_time: None
+    payment_due_date: None
+    payment_due_time: None
+    payment_date: None
+    payment_time: None
+    drop_driver_assign_date: None
+    drop_driver_assign_time: None
+    approval_cust_sign: https://pikpart.s3.ap-south-1.amazonaws.com/signature_1767433290281.png
+    approval_cust_otp: None
+    estimation_date: None
+    estimation_time: None
+    complete_date: None
+    complete_time: None
+    estimation_withc_url: None
+    jobcard_location: None
+    task_status: None
+    task_status_st_dt: None
+    task_status_st_tm: None
+    task_status_en_dt: None
+    task_status_en_tm: None
+    last_wa_sent_customer: None
+    last_wa_sent_garage: None
+    last_step_count: None
+    waiting_period: None
+    healthcheck_remark: None
+    recommendation_type: None
+    solution_updated: False
+    booking_type: None
+    adjusted_amount: 0.0
+    work_order_url: None
+    inspection_pdf_url: None
+    lead_status: None
+    next_follow_up_date: None
+    next_follow_up_time: None
+    reserve_remark: None
+    updated_by_api: None
+    assigned_by_id: None
+    assigned_by_name: None
+    assigned_to_id: None
+    assigned_to_name: None
+    assigned_to_date: None
+    assigned_to_time: None
+  ---
+    id: 31173
+    booking_datetime: 2026-01-05
+    odometer: None
+    pickup_facility: False
+    drop_facility: False
+    service_centre_id: 721
+    customer_id: 123651
+    customer_vehicle_id: 48634
+    createdAt: 2026-01-05 10:29:10.796000+00:00
+    updatedAt: 2026-01-05 10:34:01.738000+00:00
+    is_quick: False
+    price: 242.0
+    service_type_id: None
+    city: None
+    status: completed
+    centre_comment: None
+    customer_comment: None
+    service_category_id: None
+    address_id: 59872
+    camera_url: None
+    dock: None
+    assigned_users: [1666]
+    images: None
+    questionnaire: None
+    centre_service_type_id: None
+    estimated_price: 242.0
+    payment_status: paid
+    booking_slot: 15:59:10
+    customer_amc_id: None
+    claim_count: None
+    confirmed_date: 2026-01-05 00:00:00+00:00
+    confirmed_slot: 17:00:00
+    service_start_date: None
+    service_end_date: 2026-01-05 10:33:47+00:00
+    pick_settled: False
+    drop_settled: False
+    booking_duration: None
+    is_insurance: False
+    is_rc: False
+    is_puc: False
+    fuel_percent: 10
+    status_id: 9
+    payment_status_id: 12
+    jobcard_number: SA00684-2601-JA022
+    stream_id: None
+    stream_url: None
+    bm_id: None
+    order_date: 2026-01-05
+    bm_visit_id: None
+    pickup_done: False
+    drop_done: False
+    supervisor_checked_ok: False
+    remark: None
+    estimation_id: None
+    initiated_by_app: None
+    vehicle_no: AS12A84765
+    promised_delivery_date: 2026-01-05
+    conflict_reason: None
+    gst_invoice: False
+    gst: None
+    business_name: None
+    gst_address: false
+    pickup_address_id: 59872
+    in_date: 2026-01-05
+    in_time: 16:00:36
+    assigned_supervisors: [1665]
+    garage_fuel_percent: None
+    garage_remark: None
+    drop_address_id: 59872
+    gate_pass_pdf_link: None
+    gate_pass_qr_link: None
+    estimation_url: None
+    created_by_user_id: 721
+    created_by_user_type: ServiceCentre
+    created_by_user_name: Autoxpress Assam
+    updated_by_user_id: 721
+    updated_by_user_type: ServiceCentre
+    updated_by_user_name: Autoxpress Assam
+    out_date: None
+    out_time: None
+    service_lead_id: None
+    etd: None
+    applied_coupon_code: None
+    applied_coupon_discount: 0.0
+    pickup_driver_assign_date: None
+    pickup_driver_assign_time: None
+    pickup_schedule_date: None
+    pickup_schedule_time: None
+    pikpart_received: None
+    paid_total: 242.0
+    promised_delivery_time: 2026-01-05T10:33:28.808Z
+    cancelled_by: None
+    cancel_reason: None
+    cancel_reason_remark: None
+    refund_type: None
+    refund_amount: None
+    refund_remark: None
+    pickup_fuel_percent: None
+    drop_fuel_percent: None
+    pickup_odometer: None
+    drop_odometer: None
+    inspection_update_date: 2026-01-05 10:30:36+00:00
+    wip_start_date: None
+    first_name: SUVAM PAUL
+    last_name: 
+    phone_number: 7637990616
+    inspection_date: None
+    inspection_time: None
+    wip_date: None
+    wip_time: None
+    ready_date: None
+    ready_time: None
+    payment_due_date: None
+    payment_due_time: None
+    payment_date: None
+    payment_time: None
+    drop_driver_assign_date: None
+    drop_driver_assign_time: None
+    approval_cust_sign: https://pikpart.s3.ap-south-1.amazonaws.com/signature_1767609213359.png
+    approval_cust_otp: None
+    estimation_date: None
+    estimation_time: None
+    complete_date: None
+    complete_time: None
+    estimation_withc_url: None
+    jobcard_location: None
+    task_status: None
+    task_status_st_dt: None
+    task_status_st_tm: None
+    task_status_en_dt: None
+    task_status_en_tm: None
+    last_wa_sent_customer: None
+    last_wa_sent_garage: None
+    last_step_count: None
+    waiting_period: None
+    healthcheck_remark: None
+    recommendation_type: None
+    solution_updated: False
+    booking_type: None
+    adjusted_amount: 0.0
+    work_order_url: None
+    inspection_pdf_url: None
+    lead_status: None
+    next_follow_up_date: None
+    next_follow_up_time: None
+    reserve_remark: None
+    updated_by_api: None
+    assigned_by_id: None
+    assigned_by_name: None
+    assigned_to_id: None
+    assigned_to_name: None
+    assigned_to_date: None
+    assigned_to_time: None
+  ---
+    id: 30673
+    booking_datetime: 2025-12-23
+    odometer: None
+    pickup_facility: False
+    drop_facility: False
+    service_centre_id: 259
+    customer_id: 122817
+    customer_vehicle_id: 47931
+    createdAt: 2025-12-23 12:08:39.874000+00:00
+    updatedAt: 2025-12-23 12:09:59.888000+00:00
+    is_quick: False
+    price: 399.0
+    service_type_id: None
+    city: None
+    status: completed
+    centre_comment: None
+    customer_comment: None
+    service_category_id: None
+    address_id: 58775
+    camera_url: None
+    dock: None
+    assigned_users: [751]
+    images: None
+    questionnaire: None
+    centre_service_type_id: None
+    estimated_price: 399.0
+    payment_status: paid
+    booking_slot: 17:38:39
+    customer_amc_id: None
+    claim_count: None
+    confirmed_date: 2025-12-23 00:00:00+00:00
+    confirmed_slot: 19:00:00
+    service_start_date: None
+    service_end_date: 2025-12-23 12:09:50+00:00
+    pick_settled: False
+    drop_settled: False
+    booking_duration: None
+    is_insurance: False
+    is_rc: False
+    is_puc: False
+    fuel_percent: 10
+    status_id: 9
+    payment_status_id: 12
+    jobcard_number: SA00224-2612-JA028
+    stream_id: None
+    stream_url: None
+    bm_id: None
+    order_date: 2025-12-23
+    bm_visit_id: None
+    pickup_done: False
+    drop_done: False
+    supervisor_checked_ok: False
+    remark: None
+    estimation_id: None
+    initiated_by_app: None
+    vehicle_no: *
+    promised_delivery_date: 2025-12-23
+    conflict_reason: None
+    gst_invoice: False
+    gst: None
+    business_name: None
+    gst_address: false
+    pickup_address_id: 58775
+    in_date: 2025-12-23
+    in_time: 17:38:51
+    assigned_supervisors: [750]
+    garage_fuel_percent: None
+    garage_remark: None
+    drop_address_id: 58775
+    gate_pass_pdf_link: None
+    gate_pass_qr_link: None
+    estimation_url: None
+    created_by_user_id: 259
+    created_by_user_type: ServiceCentre
+    created_by_user_name: INDRA AUTOMOBILE SPARE & ACCESSORIES
+    updated_by_user_id: 259
+    updated_by_user_type: ServiceCentre
+    updated_by_user_name: INDRA AUTOMOBILE SPARE & ACCESSORIES
+    out_date: None
+    out_time: None
+    service_lead_id: None
+    etd: None
+    applied_coupon_code: None
+    applied_coupon_discount: 0.0
+    pickup_driver_assign_date: None
+    pickup_driver_assign_time: None
+    pickup_schedule_date: None
+    pickup_schedule_time: None
+    pikpart_received: None
+    paid_total: 399.0
+    promised_delivery_time: 2025-12-23T12:09:38.114Z
+    cancelled_by: None
+    cancel_reason: None
+    cancel_reason_remark: None
+    refund_type: None
+    refund_amount: None
+    refund_remark: None
+    pickup_fuel_percent: None
+    drop_fuel_percent: None
+    pickup_odometer: None
+    drop_odometer: None
+    inspection_update_date: 2025-12-23 12:08:51+00:00
+    wip_start_date: None
+    first_name: MR. SAHIL RAJAK
+    last_name: 
+    phone_number: 7974557200
+    inspection_date: None
+    inspection_time: None
+    wip_date: None
+    wip_time: None
+    ready_date: None
+    ready_time: None
+    payment_due_date: None
+    payment_due_time: None
+    payment_date: None
+    payment_time: None
+    drop_driver_assign_date: None
+    drop_driver_assign_time: None
+    approval_cust_sign: https://pikpart.s3.ap-south-1.amazonaws.com/signature_1766491781834.png
+    approval_cust_otp: None
+    estimation_date: None
+    estimation_time: None
+    complete_date: None
+    complete_time: None
+    estimation_withc_url: None
+    jobcard_location: None
+    task_status: None
+    task_status_st_dt: None
+    task_status_st_tm: None
+    task_status_en_dt: None
+    task_status_en_tm: None
+    last_wa_sent_customer: None
+    last_wa_sent_garage: None
+    last_step_count: None
+    waiting_period: None
+    healthcheck_remark: None
+    recommendation_type: None
+    solution_updated: False
+    booking_type: None
+    adjusted_amount: 0.0
+    work_order_url: None
+    inspection_pdf_url: None
+    lead_status: None
+    next_follow_up_date: None
+    next_follow_up_time: None
+    reserve_remark: None
+    updated_by_api: None
+    assigned_by_id: None
+    assigned_by_name: None
+    assigned_to_id: None
+    assigned_to_name: None
+    assigned_to_date: None
+    assigned_to_time: None
+
+================================================================================
+TABLE: vehicle_brands
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('vehicle_brands_id_seq'::regclass)
+  relevance                                | integer                        | nullable=NO  | default=None
+  name                                     | character varying              | nullable=YES | default=None
+  createdAt                                | timestamp with time zone       | nullable=NO  | default='2021-03-30 16:19:05.724+00'::timestamp with time zone
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default='2021-03-30 16:19:05.724+00'::timestamp with time zone
+  image_url                                | character varying              | nullable=YES | default=None
+  vehicle_type                             | character varying              | nullable=YES | default=None
+  priority                                 | integer                        | nullable=YES | default=None
+  fuel_type                                | character varying              | nullable=YES | default=None
+  is_popular                               | boolean                        | nullable=YES | default=None
+  vehicle_power_type                       | character varying              | nullable=YES | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+  name_hi                                  | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 308
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 1
+    relevance: 0
+    name: AJP
+    createdAt: 2021-03-30 16:19:05.724000+00:00
+    updatedAt: 2021-03-30 16:19:05.724000+00:00
+    image_url: None
+    vehicle_type: None
+    priority: None
+    fuel_type: Petrol
+    is_popular: None
+    vehicle_power_type: None
+    updated_by_api: None
+    name_hi: AJP
+  ---
+    id: 6
+    relevance: 0
+    name: Axy
+    createdAt: 2021-03-30 16:19:05.724000+00:00
+    updatedAt: 2021-03-30 16:19:05.724000+00:00
+    image_url: None
+    vehicle_type: None
+    priority: None
+    fuel_type: Petrol
+    is_popular: None
+    vehicle_power_type: None
+    updated_by_api: None
+    name_hi: AXY
+  ---
+    id: 7
+    relevance: 0
+    name: Azel
+    createdAt: 2021-03-30 16:19:05.724000+00:00
+    updatedAt: 2021-03-30 16:19:05.724000+00:00
+    image_url: None
+    vehicle_type: None
+    priority: None
+    fuel_type: Petrol
+    is_popular: None
+    vehicle_power_type: None
+    updated_by_api: None
+    name_hi: AZEL
+
+================================================================================
+TABLE: vehicle_categories
+================================================================================
+
+COLUMNS:
+  id                                       | integer                        | nullable=NO  | default=nextval('vehicle_categories_id_seq'::regclass)
+  name                                     | character varying              | nullable=NO  | default=None
+  is_active                                | boolean                        | nullable=NO  | default=None
+  createdAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updatedAt                                | timestamp with time zone       | nullable=NO  | default=None
+  updated_by_api                           | character varying              | nullable=YES | default=None
+
+TOTAL ROWS: 3
+
+SAMPLE DATA (3 rows):
+  ---
+    id: 1
+    name: 2W
+    is_active: True
+    createdAt: 2024-11-09 06:24:07.888000+00:00
+    updatedAt: 2024-11-09 06:24:07.888000+00:00
+    updated_by_api: None
+  ---
+    id: 2
+    name: 4W
+    is_active: True
+    createdAt: 2024-11-09 06:25:11.471000+00:00
+    updatedAt: 2024-11-09 06:25:11.471000+00:00
+    updated_by_api: None
+  ---
+    id: 3
+    name: 3W
+    is_active: True
+    createdAt: 2024-11-09 06:25:18.417000+00:00
+    updatedAt: 2024-11-09 06:25:32.691000+00:00
+    updated_by_api: None
+
+Done.

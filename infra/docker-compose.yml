@@ -39,8 +39,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      SG_AI_DATABASE_URL: postgresql+asyncpg://sgc:sgc@postgres:5432/sgc_agent
-      SG_AI_DATABASE_URL_SYNC: postgresql://sgc:sgc@postgres:5432/sgc_agent
+      SG_AI_DATABASE_URL: postgresql+asyncpg://sgc:sgc@postgres:5432/prod_pikpart
+      SG_AI_DATABASE_URL_SYNC: postgresql://sgc:sgc@postgres:5432/prod_pikpart
       SG_AI_REDIS_URL: redis://redis:6379/0
       SG_AI_OLLAMA_BASE_URL: http://ollama:11434
       SG_AI_DEFAULT_LLM_MODEL: ollama/llama3.1:8b

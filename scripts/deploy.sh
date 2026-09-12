@@ -29,17 +29,17 @@ fi
 
 echo "[3/5] Starting Docker containers with GPU support..."
 # Note: Ensure NVIDIA Container Toolkit is installed on your g6.2xlarge instance.
-docker compose -f infra/docker-compose.prod.yml up -d --build
+docker compose --env-file .env -f infra/docker-compose.prod.yml up -d --build
 
 echo "[3/5] Waiting for services to be healthy..."
 sleep 15 # Wait a bit for postgres to initialize before migrations
 
 echo "[4/5] Running database migrations..."
-docker compose -f infra/docker-compose.prod.yml exec -T agent-api uv run --package sgc-db alembic -c packages/db/alembic.ini upgrade head
+docker compose --env-file .env -f infra/docker-compose.prod.yml exec -T agent-api uv run --package sgc-db alembic -c packages/db/alembic.ini upgrade head
 
 echo "[5/5] Downloading llama3.1:8b model into Ollama container..."
 # This may take a few minutes depending on network speed
-docker compose -f infra/docker-compose.prod.yml exec -T ollama ollama run llama3.1:8b "Hello"
+docker compose --env-file .env -f infra/docker-compose.prod.yml exec -T ollama ollama run llama3.1:8b "Hello"
 
 echo "======================================"
 echo "Deployment Complete!"

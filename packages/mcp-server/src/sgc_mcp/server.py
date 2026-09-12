@@ -746,22 +746,19 @@ def create_app() -> Starlette:
     """Create the Starlette app with SSE transport for MCP."""
     sse = SseServerTransport("/messages/")
 
-    async def handle_sse(request):
+    async def handle_sse(scope, receive, send):
         async with sse.connect_sse(
-            request.scope, request.receive, request._send
+            scope, receive, send
         ) as streams:
             await mcp.run(
                 streams[0], streams[1], mcp.create_initialization_options()
             )
 
-    async def handle_messages(request):
-        await sse.handle_post_message(request.scope, request.receive, request._send)
-
     app = Starlette(
         debug=True,
         routes=[
-            Route("/sse", endpoint=handle_sse),
-            Route("/messages/", endpoint=handle_messages, methods=["POST"]),
+            Mount("/sse", app=handle_sse),
+            Mount("/messages/", app=sse.handle_post_message),
         ],
     )
 

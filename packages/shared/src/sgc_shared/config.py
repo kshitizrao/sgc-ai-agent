@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import model_validator
 
 
 class Settings(BaseSettings):
@@ -32,6 +33,14 @@ class Settings(BaseSettings):
 
     # ── Environment ────────────────────────────────────────────────────
     environment: str = "development"
+
+    @model_validator(mode="after")
+    def default_sync_urls(self) -> "Settings":
+        if self.database_url and "localhost" in self.database_url_sync and "localhost" not in self.database_url:
+            self.database_url_sync = self.database_url.replace("+asyncpg", "")
+        if self.agent_database_url and "localhost" in self.agent_database_url_sync and "localhost" not in self.agent_database_url:
+            self.agent_database_url_sync = self.agent_database_url.replace("+asyncpg", "")
+        return self
 
 
 def get_settings() -> Settings:

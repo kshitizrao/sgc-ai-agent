@@ -13,7 +13,7 @@ if config.config_file_name is not None:
 
 target_metadata = Base.metadata
 settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.database_url_sync)
+config.set_main_option("sqlalchemy.url", settings.agent_database_url_sync)
 
 
 def run_migrations_offline() -> None:

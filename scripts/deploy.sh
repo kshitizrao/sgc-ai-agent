@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -o pipefail
 
 echo "======================================"
 echo "SGC AI Agent: EC2 Deployment Script"
@@ -9,17 +10,19 @@ echo "======================================"
 cd "$(dirname "$0")/.."
 
 BRANCH=${1:-main}
-AWS_SECRET_NAME=${2:-}
+AWS_SECRET_NAME=${2:-sgc_ai_kr}
+AWS_REGION="ap-south-1"
 echo "[1/5] Pulling latest code from GitHub ($BRANCH branch)..."
 git reset --hard HEAD
 git pull origin $BRANCH
 
 echo "[2/5] Fetching secrets from AWS Secrets Manager..."
 if [ -n "$AWS_SECRET_NAME" ]; then
-    echo "Fetching secret: $AWS_SECRET_NAME"
+    echo "Fetching secret: $AWS_SECRET_NAME in region $AWS_REGION"
     # Ensure AWS CLI is configured via IAM Role, and jq is installed
-    aws secretsmanager get-secret-value --secret-id "$AWS_SECRET_NAME" --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > .env
-    echo ".env file generated from Secrets Manager."
+    aws secretsmanager get-secret-value --region "$AWS_REGION" --secret-id "$AWS_SECRET_NAME" --query SecretString --output text | jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' > .env
+    echo ".env file generated from Secrets Manager. Keys found:"
+    awk -F= '{print $1}' .env || true
 else
     echo "Warning: AWS_SECRET_NAME not provided. Skipping secret fetch."
 fi

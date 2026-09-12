@@ -29,7 +29,7 @@ fi
 
 echo "[3/5] Starting Docker containers with GPU support..."
 # Note: Ensure NVIDIA Container Toolkit is installed on your g6.2xlarge instance.
-docker compose --env-file .env -f infra/docker-compose.prod.yml up -d --build
+docker compose --env-file .env -f infra/docker-compose.prod.yml up -d --build --force-recreate
 
 echo "[3/5] Waiting for services to be healthy..."
 sleep 15 # Wait a bit for postgres to initialize before migrations

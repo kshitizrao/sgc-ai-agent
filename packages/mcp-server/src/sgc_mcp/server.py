@@ -757,8 +757,8 @@ def create_app() -> Starlette:
     app = Starlette(
         debug=True,
         routes=[
+            Mount("/sse/messages/", app=sse.handle_post_message),
             Mount("/sse", app=handle_sse),
-            Mount("/messages/", app=sse.handle_post_message),
         ],
     )
 

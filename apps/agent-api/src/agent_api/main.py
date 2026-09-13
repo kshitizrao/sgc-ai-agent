@@ -23,7 +23,7 @@ from sgc_db.session_dual import dispose_all_engines
 from sgc_llm.router import ModelRouter
 from sgc_shared.config import get_settings
 from sgc_shared.logging import setup_logging
-from sgc_shared.types import ContextEnvelope, CustomerContext, LocationContext
+from sgc_shared.types import ContextEnvelope, CustomerContext, LocationContext, ToolResult
 from sgc_tools.registry import create_registry
 
 logger = logging.getLogger("agent.api")
@@ -387,7 +387,26 @@ async def invoke_tool(
     session=Depends(get_db_session),
 ):
     registry = create_registry()
-    result = await registry.invoke(body.tool_name, session, **body.parameters)
+    
+    if registry.get(body.tool_name):
+        result = await registry.invoke(body.tool_name, session, **body.parameters)
+    else:
+        try:
+            mcp_client = await get_mcp_client()
+            mcp_tools = await mcp_client.list_tools()
+            if any(t["name"] == body.tool_name for t in mcp_tools):
+                mcp_res = await mcp_client.call_tool(body.tool_name, body.parameters)
+                result = ToolResult(
+                    tool_name=mcp_res["tool_name"],
+                    success=mcp_res["success"],
+                    data=mcp_res["data"],
+                    error=mcp_res["error"]
+                )
+            else:
+                result = ToolResult(tool_name=body.tool_name, success=False, error=f"Unknown tool: {body.tool_name}")
+        except Exception as e:
+            logger.error("Failed to invoke MCP tool %s: %s", body.tool_name, e)
+            result = ToolResult(tool_name=body.tool_name, success=False, error=f"MCP Error: {str(e)}")
 
     if body.session_id:
         repo = SessionRepository(session)

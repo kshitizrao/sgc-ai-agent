@@ -144,7 +144,7 @@ async def execute_pikpart_query(
             extra={
                 "session_id": session_id,
                 "tool": tool_name,
-                "args": tool_args,
+                "tool_args": tool_args,
             },
         )
 

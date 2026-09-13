@@ -408,7 +408,7 @@ async def list_tools() -> list[Tool]:
 async def call_tool(name: str, arguments: dict[str, Any] | None) -> list[TextContent]:
     """Route MCP tool calls to their implementations."""
     args = arguments or {}
-    logger.info("Tool call received", extra={"tool": name, "args": args})
+    logger.info("Tool call received", extra={"tool": name, "tool_args": args})
     start = time.perf_counter()
 
     try:

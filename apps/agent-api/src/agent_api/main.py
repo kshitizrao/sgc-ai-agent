@@ -51,8 +51,8 @@ def _start_mcp_server() -> subprocess.Popen | None:
         proc = subprocess.Popen(
             [sys.executable, "-m", "sgc_mcp.server"],
             env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stdout=sys.stdout,
+            stderr=sys.stderr,
         )
         logger.info(
             "MCP server started",

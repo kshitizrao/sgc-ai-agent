@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     ollama_base_url: str = "http://localhost:11434"
     default_llm_model: str = "gpt-4o-mini"
     fallback_llm_model: str = "gpt-4o-mini"
+    pikpart_api_token: str = ""
 
     # ── MCP Server ─────────────────────────────────────────────────────
     mcp_transport: str = "sse"

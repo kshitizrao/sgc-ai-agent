@@ -68,9 +68,9 @@ services:
     build:
       context: ..
       dockerfile: apps/agent-api/Dockerfile
-    command: ["uv", "run", "streamlit", "run", "scripts/streamlit_chatbot.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+    command: ["uv", "run", "streamlit", "run", "scripts/streamlit_chatbot.py", "--server.port", "3001", "--server.address", "0.0.0.0"]
     ports:
-      - "8501:8501"
+      - "3001:3001"
     environment:
       - API_BASE_URL=http://agent-api:8000
     depends_on:

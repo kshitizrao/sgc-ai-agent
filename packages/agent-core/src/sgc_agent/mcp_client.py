@@ -141,7 +141,7 @@ class MCPClient:
 
         logger.info(
             "Calling MCP tool",
-            extra={"tool": tool_name, "args": args},
+            extra={"tool": tool_name, "tool_args": args},
         )
         start = time.perf_counter()
 

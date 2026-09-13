@@ -7,6 +7,7 @@ RUN pip install uv
 COPY pyproject.toml .
 COPY packages/ packages/
 COPY apps/agent-api/ apps/agent-api/
+COPY scripts/ scripts/
 
 RUN uv sync --package sgc-agent-api --package sgc-mcp-server
 

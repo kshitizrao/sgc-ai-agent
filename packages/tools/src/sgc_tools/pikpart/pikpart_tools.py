@@ -123,7 +123,7 @@ class FetchPikpartVehicleDetailsTool(BaseTool):
         headers = {"Authorization": f"Bearer {auth_token}"}
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json={"vehicle_number": vehicle_number}, headers=headers)
+                response = await client.post(url, json={"object_hash": {"vehicle_number": vehicle_number}}, headers=headers)
                 response.raise_for_status()
                 data = response.json()
             return ToolResult(

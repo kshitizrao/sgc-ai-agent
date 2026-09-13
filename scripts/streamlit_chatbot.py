@@ -103,8 +103,7 @@ with st.sidebar:
         fetch_models()
     
     if st.session_state.models:
-        model_names = [m["name"] for m in st.session_state.models]
-        st.session_state.selected_model = st.selectbox("LLM Model (Visual Only)", model_names)
+        st.session_state.selected_model = st.selectbox("LLM Model (Visual Only)", st.session_state.models)
         
     st.divider()
     

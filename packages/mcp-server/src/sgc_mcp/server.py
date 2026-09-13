@@ -744,7 +744,7 @@ async def _get_booking_history(args: dict) -> list[TextContent]:
 
 def create_app() -> Starlette:
     """Create the Starlette app with SSE transport for MCP."""
-    sse = SseServerTransport("/messages/")
+    sse = SseServerTransport("/sse/messages/")
 
     async def handle_sse(scope, receive, send):
         async with sse.connect_sse(

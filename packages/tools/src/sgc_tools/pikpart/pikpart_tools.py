@@ -109,21 +109,13 @@ class FetchPikpartVehicleCategoriesTool(BaseTool):
 
 class FetchPikpartVehicleDetailsTool(BaseTool):
     name = "fetch_pikpart_vehicle_details"
-    description = "Fetch detailed vehicle information from Pikpart API using a vehicle registration number (e.g., DL10CT9251) and an auth token"
+    description = "Fetch detailed vehicle information from Pikpart API using a vehicle registration number (e.g., DL10CT9251)"
 
-    async def execute(self, session, vehicle_number: str, auth_token: str = "", **kwargs):
-        if not auth_token:
-            from sgc_shared.config import get_settings
-            auth_token = getattr(get_settings(), "pikpart_api_token", "")
-            
-        if not auth_token:
-            return ToolResult(tool_name=self.name, success=False, error="Pikpart API token is missing. Please configure it in settings.")
-            
+    async def execute(self, session, vehicle_number: str, **kwargs):
         url = "https://uatapi.pikpart.com/api/Customer/searchVehicles"
-        headers = {"Authorization": f"Bearer {auth_token}"}
         try:
             async with httpx.AsyncClient() as client:
-                response = await client.post(url, json={"object_hash": {"vehicle_number": vehicle_number}}, headers=headers)
+                response = await client.post(url, json={"object_hash": {"vehicle_number": vehicle_number}})
                 response.raise_for_status()
                 data = response.json()
             return ToolResult(

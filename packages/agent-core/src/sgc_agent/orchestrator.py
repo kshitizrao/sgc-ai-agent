@@ -153,18 +153,9 @@ class AgentOrchestrator:
                 "No successful tool results",
                 extra={"session_id": session_id, "intent": intent.value},
             )
-            fallback = (
-                "Abhi yeh information mere paas nahi hai. Kya aap thoda aur "
-                "detail share kar sakte hain? Jaise aapka phone number ya "
-                "vehicle number — toh main better help kar sakta hoon. 😊"
-            )
-            return {
-                "response": fallback,
-                "intent": intent.value,
-                "source_refs": source_refs,
-                "requires_human_review": False,
-                "model_used": "",
-            }
+            # Removed the hardcoded fallback return here. We want the LLM to
+            # see the tool failure (e.g. missing API token) and generate a
+            # context-aware, polite response instead of skipping the LLM entirely.
 
         # ── Step 6: Generate LLM response ──────────────────────────────
         llm_start = time.perf_counter()

@@ -22,6 +22,7 @@ import time
 from datetime import datetime
 from typing import Any
 
+import httpx
 from mcp.server import Server
 from mcp.server.sse import SseServerTransport
 from mcp.types import (
@@ -397,6 +398,24 @@ async def list_tools() -> list[Tool]:
                 },
             },
         ),
+        # ── 12. fetch_pikpart_vehicle_details ───────────────────────────
+        Tool(
+            name="fetch_pikpart_vehicle_details",
+            description=(
+                "Fetch detailed vehicle information from Pikpart API using a vehicle registration number (e.g., DL10CT9251). "
+                "Always use this when the customer provides a vehicle registration number."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "vehicle_number": {
+                        "type": "string",
+                        "description": "Vehicle registration number",
+                    },
+                },
+                "required": ["vehicle_number"],
+            },
+        ),
     ]
 
 
@@ -452,6 +471,8 @@ async def _dispatch_tool(name: str, args: dict[str, Any]) -> list[TextContent]:
             return await _find_services_for_vehicle(args)
         case "get_booking_history":
             return await _get_booking_history(args)
+        case "fetch_pikpart_vehicle_details":
+            return await _fetch_pikpart_vehicle_details(args)
         case _:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
@@ -736,6 +757,22 @@ async def _get_booking_history(args: dict) -> list[TextContent]:
     )
     rows = await _execute_readonly(sql)
     return _format_result(rows, "get_booking_history")
+
+
+async def _fetch_pikpart_vehicle_details(args: dict) -> list[TextContent]:
+    vehicle_number = args.get("vehicle_number")
+    if not vehicle_number:
+        return [TextContent(type="text", text="Please provide vehicle_number.")]
+
+    url = "https://uatapi.pikpart.com/api/Customer/searchVehicles"
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(url, json={"object_hash": {"vehicle_number": vehicle_number}})
+            response.raise_for_status()
+            data = response.json()
+        return [TextContent(type="text", text=json.dumps(data, indent=2))]
+    except Exception as e:
+        return [TextContent(type="text", text=f"Failed to fetch vehicle details from API: {e}")]
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -416,6 +416,32 @@ async def list_tools() -> list[Tool]:
                 "required": ["vehicle_number"],
             },
         ),
+        # ── 13. customer_join_customer_vehicles ────────────────────────
+        Tool(
+            name="customer_join_customer_vehicles",
+            description=(
+                "Fetch complete customer data along with their registered vehicle details in one go. "
+                "Optionally filter by customer_id or phone_number. Perfect when you need to know "
+                "both the customer info and their vehicles from a phone number."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "customer_id": {
+                        "type": "integer",
+                        "description": "Customer ID",
+                    },
+                    "phone_number": {
+                        "type": "string",
+                        "description": "10-digit Indian mobile number",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Max results to return (default 10)",
+                    },
+                },
+            },
+        ),
     ]
 
 
@@ -473,6 +499,8 @@ async def _dispatch_tool(name: str, args: dict[str, Any]) -> list[TextContent]:
             return await _get_booking_history(args)
         case "fetch_pikpart_vehicle_details":
             return await _fetch_pikpart_vehicle_details(args)
+        case "customer_join_customer_vehicles":
+            return await _customer_join_customer_vehicles(args)
         case _:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
@@ -480,6 +508,27 @@ async def _dispatch_tool(name: str, args: dict[str, Any]) -> list[TextContent]:
 # ---------------------------------------------------------------------------
 # Individual tool handlers
 # ---------------------------------------------------------------------------
+
+async def _customer_join_customer_vehicles(args: dict) -> list[TextContent]:
+    limit = int(args.get("limit", 10))
+    customer_id = args.get("customer_id")
+    phone_number = args.get("phone_number")
+    
+    where_clause = ""
+    if customer_id:
+        where_clause = f" WHERE c.id = {int(customer_id)}"
+    elif phone_number:
+        where_clause = f" WHERE c.phone_number = '{phone_number}'"
+        
+    sql = (
+        f"SELECT c.id as customer_id, c.first_name, c.last_name, c.phone_number, c.email, "
+        f"cv.id as vehicle_id, cv.vehicle_no, cv.make, cv.model, cv.fuel_type, cv.engine_cc "
+        f"FROM customers c "
+        f"INNER JOIN customer_vehicles cv ON c.id = cv.customer_id"
+        f"{where_clause} LIMIT {limit}"
+    )
+    rows = await _execute_readonly(sql)
+    return _format_result(rows, "customer_join_customer_vehicles")
 
 async def _lookup_customer(args: dict) -> list[TextContent]:
     conditions = []

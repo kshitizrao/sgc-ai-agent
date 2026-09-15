@@ -416,30 +416,25 @@ async def list_tools() -> list[Tool]:
                 "required": ["vehicle_number"],
             },
         ),
-        # ── 13. customer_join_customer_vehicles ────────────────────────
+        # ── 13. fetch_pikpart_customer_service_details ─────────────────
         Tool(
-            name="customer_join_customer_vehicles",
+            name="fetch_pikpart_customer_service_details",
             description=(
-                "Fetch complete customer data along with their registered vehicle details in one go. "
-                "Optionally filter by customer_id or phone_number. Perfect when you need to know "
-                "both the customer info and their vehicles from a phone number."
+                "Fetch customer details, vehicle details, service types, garage details, service pricing, and discount against vehicle details. Requires phone number and service centre id."
             ),
             inputSchema={
                 "type": "object",
                 "properties": {
-                    "customer_id": {
-                        "type": "integer",
-                        "description": "Customer ID",
-                    },
                     "phone_number": {
                         "type": "string",
                         "description": "10-digit Indian mobile number",
                     },
-                    "limit": {
+                    "service_centre_id": {
                         "type": "integer",
-                        "description": "Max results to return (default 10)",
+                        "description": "ID of the service centre",
                     },
                 },
+                "required": ["phone_number", "service_centre_id"],
             },
         ),
     ]
@@ -499,8 +494,8 @@ async def _dispatch_tool(name: str, args: dict[str, Any]) -> list[TextContent]:
             return await _get_booking_history(args)
         case "fetch_pikpart_vehicle_details":
             return await _fetch_pikpart_vehicle_details(args)
-        case "customer_join_customer_vehicles":
-            return await _customer_join_customer_vehicles(args)
+        case "fetch_pikpart_customer_service_details":
+            return await _fetch_pikpart_customer_service_details(args)
         case _:
             return [TextContent(type="text", text=f"Unknown tool: {name}")]
 
@@ -509,26 +504,62 @@ async def _dispatch_tool(name: str, args: dict[str, Any]) -> list[TextContent]:
 # Individual tool handlers
 # ---------------------------------------------------------------------------
 
-async def _customer_join_customer_vehicles(args: dict) -> list[TextContent]:
-    limit = int(args.get("limit", 10))
-    customer_id = args.get("customer_id")
+async def _fetch_pikpart_customer_service_details(args: dict) -> list[TextContent]:
     phone_number = args.get("phone_number")
+    service_centre_id = args.get("service_centre_id", 218)
     
-    where_clause = ""
-    if customer_id:
-        where_clause = f" WHERE c.id = {int(customer_id)}"
-    elif phone_number:
-        where_clause = f" WHERE c.phone_number = '{phone_number}'"
+    if not phone_number:
+        return [TextContent(type="text", text="Please provide phone_number.")]
         
     sql = (
-        f"SELECT c.id as customer_id, c.first_name, c.last_name, c.phone_number, c.email, "
-        f"cv.id as vehicle_id, cv.vehicle_no, cv.make, cv.model, cv.fuel_type, cv.engine_cc "
+        f"SELECT "
+        f"c.id AS customer_id, "
+        f"c.first_name || ' ' || COALESCE(c.last_name, '') AS customer_name, "
+        f"c.phone_number, "
+        f"cv.id AS customer_vehicle_id, "
+        f"cv.vehicle_no, "
+        f"cv.make, "
+        f"cv.model AS customer_vehicle_model, "
+        f"cv.fuel_type AS customer_fuel_type, "
+        f"vs.id AS vehicle_service_id, "
+        f"s.id AS service_id, "
+        f"s.name AS service_name, "
+        f"s.service_code, "
+        f"scat.name AS service_category, "
+        f"vs.price AS base_price, "
+        f"COALESCE(vs.discount_percent, 0) AS discount_percent, "
+        f"ROUND((vs.price - (vs.price * COALESCE(vs.discount_percent, 0) / 100.0))::numeric, 2) AS discounted_price, "
+        f"vs.tier_type, "
+        f"vs.service_centre_id AS garage_id "
         f"FROM customers c "
-        f"INNER JOIN customer_vehicles cv ON c.id = cv.customer_id"
-        f"{where_clause} LIMIT {limit}"
+        f"LEFT JOIN customer_vehicles cv "
+        f"    ON cv.customer_id = c.id "
+        f"   AND cv.is_active = true "
+        f"LEFT JOIN vehicle_services vs "
+        f"    ON vs.service_centre_id = {int(service_centre_id)} "
+        f"   AND vs.is_active = true "
+        f"   AND ( "
+        f"       vs.vehicle_model_id = cv.vehicle_id "
+        f"       OR LOWER(vs.model_name) = LOWER(cv.model) "
+        f"       OR vs.vehicle_model_id IS NULL "
+        f"   ) "
+        f"   AND ( "
+        f"       vs.fuel_type IS NULL "
+        f"       OR LOWER(vs.fuel_type) = LOWER(cv.fuel_type) "
+        f"   ) "
+        f"LEFT JOIN services s "
+        f"    ON s.id = vs.service_id "
+        f"   AND s.is_active = true "
+        f"LEFT JOIN service_categories scat "
+        f"    ON scat.id = vs.service_category_id "
+        f"WHERE ( "
+        f"    RIGHT(c.phone_number, 10) = RIGHT('{phone_number}', 10) "
+        f"    OR RIGHT(c.alt_phone_number, 10) = RIGHT('{phone_number}', 10) "
+        f") "
+        f"ORDER BY cv.id, scat.name, s.name ASC"
     )
     rows = await _execute_readonly(sql)
-    return _format_result(rows, "customer_join_customer_vehicles")
+    return _format_result(rows, "fetch_pikpart_customer_service_details")
 
 async def _lookup_customer(args: dict) -> list[TextContent]:
     conditions = []

@@ -109,44 +109,7 @@ class FetchPikpartVehicleCategoriesTool(BaseTool):
 
 from sqlalchemy import text
 
-class CustomerJoinCustomerVehiclesTool(BaseTool):
-    name = "customer_join_customer_vehicles"
-    description = "Fetch complete customer data along with their registered vehicle details. Optionally filter by customer_id or phone_number."
 
-    async def execute(self, session, customer_id: int | None = None, phone_number: str | None = None, limit: int = 10, **kwargs):
-        query_str = """
-            SELECT c.id as customer_id, c.first_name, c.last_name, c.phone_number, c.email,
-                   cv.id as vehicle_id, cv.vehicle_no, cv.make, cv.model, cv.fuel_type, cv.engine_cc
-            FROM customers c
-            INNER JOIN customer_vehicles cv 
-            ON c.id = cv.customer_id
-        """
-        params = {"limit": limit}
-        
-        if customer_id:
-            query_str += " WHERE c.id = :customer_id"
-            params["customer_id"] = customer_id
-        elif phone_number:
-            query_str += " WHERE c.phone_number = :phone_number"
-            params["phone_number"] = phone_number
-            
-        query_str += " LIMIT :limit"
-        
-        query = text(query_str)
-        
-        try:
-            result = await session.execute(query, params)
-            return ToolResult(
-                tool_name=self.name,
-                success=True,
-                data=[dict(row._mapping) for row in result]
-            )
-        except Exception as e:
-            return ToolResult(
-                tool_name=self.name,
-                success=False,
-                error=str(e)
-            )
 
 class FetchPikpartVehicleDetailsTool(BaseTool):
     name = "fetch_pikpart_vehicle_details"
@@ -166,4 +129,76 @@ class FetchPikpartVehicleDetailsTool(BaseTool):
             )
         except Exception as e:
             return ToolResult(tool_name=self.name, success=False, error=str(e))
+
+class FetchPikpartCustomerServiceDetailsTool(BaseTool):
+    name = "fetch_pikpart_customer_service_details"
+    description = "Fetch customer details, vehicle details, service types, garage details, service pricing, and discount against vehicle details. Requires phone number and service centre id."
+
+    async def execute(self, session, phone_number: str, service_centre_id: int, **kwargs):
+        query_str = """
+            SELECT 
+                c.id AS customer_id,
+                c.first_name || ' ' || COALESCE(c.last_name, '') AS customer_name,
+                c.phone_number,
+                cv.id AS customer_vehicle_id,
+                cv.vehicle_no,
+                cv.make,
+                cv.model AS customer_vehicle_model,
+                cv.fuel_type AS customer_fuel_type,
+                vs.id AS vehicle_service_id,
+                s.id AS service_id,
+                s.name AS service_name,
+                s.service_code,
+                scat.name AS service_category,
+                vs.price AS base_price,
+                COALESCE(vs.discount_percent, 0) AS discount_percent,
+                ROUND((vs.price - (vs.price * COALESCE(vs.discount_percent, 0) / 100.0))::numeric, 2) AS discounted_price,
+                vs.tier_type,
+                vs.service_centre_id AS garage_id
+            FROM customers c
+            LEFT JOIN customer_vehicles cv 
+                ON cv.customer_id = c.id 
+               AND cv.is_active = true
+            LEFT JOIN vehicle_services vs 
+                ON vs.service_centre_id = :service_centre_id
+               AND vs.is_active = true
+               AND (
+                   vs.vehicle_model_id = cv.vehicle_id 
+                   OR LOWER(vs.model_name) = LOWER(cv.model)
+                   OR vs.vehicle_model_id IS NULL
+               )
+               AND (
+                   vs.fuel_type IS NULL 
+                   OR LOWER(vs.fuel_type) = LOWER(cv.fuel_type)
+               )
+            LEFT JOIN services s 
+                ON s.id = vs.service_id 
+               AND s.is_active = true
+            LEFT JOIN service_categories scat 
+                ON scat.id = vs.service_category_id
+            WHERE (
+                RIGHT(c.phone_number, 10) = RIGHT(:phone_number, 10) 
+                OR RIGHT(c.alt_phone_number, 10) = RIGHT(:phone_number, 10)
+            )
+            ORDER BY cv.id, scat.name, s.name ASC;
+        """
+        query = text(query_str)
+        params = {
+            "phone_number": phone_number,
+            "service_centre_id": service_centre_id
+        }
+        
+        try:
+            result = await session.execute(query, params)
+            return ToolResult(
+                tool_name=self.name,
+                success=True,
+                data=[dict(row._mapping) for row in result]
+            )
+        except Exception as e:
+            return ToolResult(
+                tool_name=self.name,
+                success=False,
+                error=str(e)
+            )
 

@@ -75,7 +75,7 @@ def create_registry() -> ToolRegistry:
         FetchPikpartVehicleBrandsTool,
         FetchPikpartVehicleCategoriesTool,
         FetchPikpartVehicleDetailsTool,
-        CustomerJoinCustomerVehiclesTool,
+        FetchPikpartCustomerServiceDetailsTool,
     )
 
     registry = ToolRegistry()
@@ -105,7 +105,7 @@ def create_registry() -> ToolRegistry:
         FetchPikpartVehicleBrandsTool,
         FetchPikpartVehicleCategoriesTool,
         FetchPikpartVehicleDetailsTool,
-        CustomerJoinCustomerVehiclesTool,
+        FetchPikpartCustomerServiceDetailsTool,
     ]:
         registry.register(tool_cls())
     return registry

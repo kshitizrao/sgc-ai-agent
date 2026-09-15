@@ -107,6 +107,37 @@ class FetchPikpartVehicleCategoriesTool(BaseTool):
             data=[dict(row._mapping) for row in result]
         )
 
+from sqlalchemy import text
+
+class JoinTablesByIDTool(BaseTool):
+    name = "join_tables_by_id"
+    description = "Perform an INNER JOIN between two tables based on specified ID columns"
+
+    async def execute(self, session, table1: str, table2: str, t1_join_col: str, t2_join_col: str, limit: int = 10, **kwargs):
+        # Using f-strings for identifiers (tables/columns) and bind parameters for values (limit)
+        query_str = f"""
+            SELECT * 
+            FROM customers c
+            INNER JOIN customer_vehicles cv 
+            ON t1.id = t2.customer_id
+            LIMIT :limit
+        """
+        query = text(query_str)
+        
+        try:
+            result = await session.execute(query, {"limit": limit})
+            return ToolResult(
+                tool_name=self.name,
+                success=True,
+                data=[dict(row._mapping) for row in result]
+            )
+        except Exception as e:
+            return ToolResult(
+                tool_name=self.name,
+                success=False,
+                error=str(e)
+            )
+
 class FetchPikpartVehicleDetailsTool(BaseTool):
     name = "fetch_pikpart_vehicle_details"
     description = "Fetch detailed vehicle information from Pikpart API using a vehicle registration number (e.g., DL10CT9251)"

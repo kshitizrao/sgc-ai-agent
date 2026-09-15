@@ -109,23 +109,33 @@ class FetchPikpartVehicleCategoriesTool(BaseTool):
 
 from sqlalchemy import text
 
-class JoinTablesByIDTool(BaseTool):
-    name = "join_tables_by_id"
-    description = "Perform an INNER JOIN between two tables based on specified ID columns"
+class CustomerJoinCustomerVehiclesTool(BaseTool):
+    name = "customer_join_customer_vehicles"
+    description = "Fetch complete customer data along with their registered vehicle details. Optionally filter by customer_id or phone_number."
 
-    async def execute(self, session, table1: str, table2: str, t1_join_col: str, t2_join_col: str, limit: int = 10, **kwargs):
-        # Using f-strings for identifiers (tables/columns) and bind parameters for values (limit)
-        query_str = f"""
-            SELECT * 
+    async def execute(self, session, customer_id: int | None = None, phone_number: str | None = None, limit: int = 10, **kwargs):
+        query_str = """
+            SELECT c.id as customer_id, c.first_name, c.last_name, c.phone_number, c.email,
+                   cv.id as vehicle_id, cv.vehicle_no, cv.make, cv.model, cv.fuel_type, cv.engine_cc
             FROM customers c
             INNER JOIN customer_vehicles cv 
-            ON t1.id = t2.customer_id
-            LIMIT :limit
+            ON c.id = cv.customer_id
         """
+        params = {"limit": limit}
+        
+        if customer_id:
+            query_str += " WHERE c.id = :customer_id"
+            params["customer_id"] = customer_id
+        elif phone_number:
+            query_str += " WHERE c.phone_number = :phone_number"
+            params["phone_number"] = phone_number
+            
+        query_str += " LIMIT :limit"
+        
         query = text(query_str)
         
         try:
-            result = await session.execute(query, {"limit": limit})
+            result = await session.execute(query, params)
             return ToolResult(
                 tool_name=self.name,
                 success=True,

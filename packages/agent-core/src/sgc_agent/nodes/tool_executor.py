@@ -183,7 +183,10 @@ def _infer_tool_from_message(message: str, context: ContextEnvelope) -> dict:
         if any(w in lowered for w in ["booking", "history", "pichli", "service kab"]):
             return {"tool_calls": [{"tool": "get_booking_history", "arguments": {"phone_number": phone}}]}
         garage_id = getattr(context.customer, "garage_id", 218)
-        return {"tool_calls": [{"tool": "fetch_pikpart_customer_service_details", "arguments": {"phone_number": phone, "service_centre_id": garage_id}}]}
+        args = {"phone_number": phone, "service_centre_id": garage_id}
+        if vehicle_match:
+            args["vehicle_no"] = vehicle_match.group(0)
+        return {"tool_calls": [{"tool": "fetch_pikpart_customer_service_details", "arguments": args}]}
 
     if vehicle_match:
         veh_no = vehicle_match.group(0)

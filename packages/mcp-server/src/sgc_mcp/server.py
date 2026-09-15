@@ -420,7 +420,7 @@ async def list_tools() -> list[Tool]:
         Tool(
             name="fetch_pikpart_customer_service_details",
             description=(
-                "Fetch customer details, vehicle details, service types, garage details, service pricing, and discount against vehicle details. Requires phone number and service centre id."
+                "Fetch customer details, vehicle details, service types, garage details, service pricing, and discount against vehicle details. Supports customers with multiple vehicles. Requires phone number and service centre id. Optionally filter by vehicle_no."
             ),
             inputSchema={
                 "type": "object",
@@ -432,6 +432,10 @@ async def list_tools() -> list[Tool]:
                     "service_centre_id": {
                         "type": "integer",
                         "description": "ID of the service centre",
+                    },
+                    "vehicle_no": {
+                        "type": "string",
+                        "description": "Optional vehicle registration number to filter a specific vehicle if customer has multiple",
                     },
                 },
                 "required": ["phone_number", "service_centre_id"],
@@ -507,10 +511,13 @@ async def _dispatch_tool(name: str, args: dict[str, Any]) -> list[TextContent]:
 async def _fetch_pikpart_customer_service_details(args: dict) -> list[TextContent]:
     phone_number = args.get("phone_number")
     service_centre_id = args.get("service_centre_id", 218)
+    vehicle_no = args.get("vehicle_no")
     
     if not phone_number:
         return [TextContent(type="text", text="Please provide phone_number.")]
         
+    veh_filter = f"AND LOWER(cv.vehicle_no) = LOWER('{vehicle_no}') " if vehicle_no else ""
+
     sql = (
         f"SELECT "
         f"c.id AS customer_id, "
@@ -521,6 +528,7 @@ async def _fetch_pikpart_customer_service_details(args: dict) -> list[TextConten
         f"cv.make, "
         f"cv.model AS customer_vehicle_model, "
         f"cv.fuel_type AS customer_fuel_type, "
+        f"cv.vehicle_model_type, "
         f"vs.id AS vehicle_service_id, "
         f"s.id AS service_id, "
         f"s.name AS service_name, "
@@ -535,6 +543,7 @@ async def _fetch_pikpart_customer_service_details(args: dict) -> list[TextConten
         f"LEFT JOIN customer_vehicles cv "
         f"    ON cv.customer_id = c.id "
         f"   AND cv.is_active = true "
+        f"   {veh_filter}"
         f"LEFT JOIN vehicle_services vs "
         f"    ON vs.service_centre_id = {int(service_centre_id)} "
         f"   AND vs.is_active = true "

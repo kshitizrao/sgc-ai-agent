@@ -140,11 +140,12 @@ async def execute_pikpart_query(
         tool_args = tc.get("arguments", {})
 
         logger.info(
-            "Executing MCP tool",
+            f"[Agent Tool Executor] Dispatched MCP Tool: '{tool_name}' | Caller File: '{__file__}'",
             extra={
                 "session_id": session_id,
                 "tool": tool_name,
                 "tool_args": tool_args,
+                "file": __file__
             },
         )
 

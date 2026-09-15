@@ -32,9 +32,23 @@ class ToolRegistry:
     async def invoke(
         self, name: str, session: AsyncSession, **kwargs: Any
     ) -> ToolResult:
+        import logging
+        import inspect
+        logger = logging.getLogger("agent.tools")
         tool = self.get(name)
         if not tool:
+            logger.warning(f"[ToolRegistry] Unknown tool requested: {name} (File: {__file__})")
             return ToolResult(tool_name=name, success=False, error=f"Unknown tool: {name}")
+        
+        try:
+            tool_file = inspect.getfile(tool.__class__)
+        except TypeError:
+            tool_file = tool.__module__
+            
+        logger.info(
+            f"[ToolRegistry] Executing tool: '{name}' | Function/Class: '{tool.__class__.__name__}' | File: '{tool_file}'",
+            extra={"tool": name, "tool_class": tool.__class__.__name__, "tool_file": tool_file}
+        )
         return await tool.execute(session, **kwargs)
 
 

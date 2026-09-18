@@ -216,6 +216,7 @@ class ChatResponse(BaseModel):
     source_refs: list[dict] = Field(default_factory=list)
     requires_human_review: bool = False
     model_used: str = ""
+    tool_calls: list[dict] = Field(default_factory=list)
 
 
 class ToolInvokeRequest(BaseModel):
@@ -389,6 +390,13 @@ async def chat(
         },
     )
 
+    frontend_tool_calls = []
+    for tr in result.get("tool_results", []):
+        frontend_tool_calls.append({
+            "tool": tr.get("tool_name", ""),
+            "parameters": tr.get("parameters", {})
+        })
+
     return ChatResponse(
         session_id=body.session_id,
         response=result["response"],
@@ -396,6 +404,7 @@ async def chat(
         source_refs=result.get("source_refs", []),
         requires_human_review=result.get("requires_human_review", False),
         model_used=result.get("model_used", ""),
+        tool_calls=frontend_tool_calls,
     )
 
 

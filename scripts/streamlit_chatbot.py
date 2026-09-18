@@ -200,7 +200,8 @@ if prompt := st.chat_input("Type your message here..."):
                         "intent": data.get("intent"),
                         "model_used": data.get("model_used"),
                         "requires_human_review": data.get("requires_human_review"),
-                        "source_refs": data.get("source_refs", [])
+                        "source_refs": data.get("source_refs", []),
+                        "tool_calls": data.get("tool_calls", [])
                     }
                     
                     with st.expander("🔍 Agent Thought Process & Metadata", expanded=True):
@@ -209,6 +210,10 @@ if prompt := st.chat_input("Type your message here..."):
                             st.write("**Source References (Tools used / DB Queries):**")
                             for ref in data["source_refs"]:
                                 st.write(f"- {ref}")
+                        if data.get("tool_calls"):
+                            st.write("**Tools Called:**")
+                            for tc in data["tool_calls"]:
+                                st.json(tc)
                                 
                     # Store to session state
                     st.session_state.messages.append({

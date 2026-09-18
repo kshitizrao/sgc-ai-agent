@@ -20,6 +20,7 @@ from sgc_agent.mcp_client import get_mcp_client, shutdown_mcp_client
 from sgc_agent.orchestrator import AgentOrchestrator
 from sgc_db.repositories.sessions import SessionRepository
 from sgc_db.session_dual import dispose_all_engines
+from sgc_db.models.agent_meta import Conversation
 from sgc_llm.router import ModelRouter
 from sgc_shared.config import get_settings
 from sgc_shared.logging import setup_logging
@@ -249,24 +250,74 @@ async def list_models():
 async def create_session(
     body: CreateSessionRequest,
     session=Depends(get_db_session),
+    pikpart_session=Depends(get_pikpart_db_session),
 ):
+    repo = SessionRepository(session)
+    customer_id = body.customer_id
+    vehicle_id = body.vehicle_id
+    
+    vehicle_make = None
+    vehicle_model = None
+    vehicle_variant = None
+    fuel_type = None
+    registration_no = None
+
+    if body.phone_number:
+        from sqlalchemy import select
+        query = text("SELECT * FROM public.customers WHERE phone_number = :phone LIMIT 1")
+        result = await pikpart_session.execute(query, {"phone": body.phone_number})
+        customer_row = result.fetchone()
+        
+        if customer_row:
+            customer_data = dict(customer_row._mapping)
+            customer_id = str(customer_data.get("id", customer_id))
+            
+            v_query = text("SELECT * FROM public.customer_vehicles WHERE customer_id = :cid ORDER BY id DESC LIMIT 1")
+            v_result = await pikpart_session.execute(v_query, {"cid": customer_data.get("id")})
+            vehicle_row = v_result.fetchone()
+            
+            if vehicle_row:
+                v_data = dict(vehicle_row._mapping)
+                vehicle_id = str(v_data.get("id", vehicle_id))
+                vehicle_make = v_data.get("make")
+                vehicle_model = v_data.get("model")
+                vehicle_variant = v_data.get("variant")
+                fuel_type = v_data.get("fuel_type")
+                registration_no = v_data.get("registration_no")
+
+    if customer_id:
+        recent_conv = await session.execute(
+            select(Conversation)
+            .where(Conversation.customer_id == customer_id)
+            .order_by(Conversation.created_at.desc())
+            .limit(1)
+        )
+        recent_conv = recent_conv.scalar_one_or_none()
+        
+        if recent_conv:
+            return CreateSessionResponse(session_id=recent_conv.session_id)
+
     session_id = str(uuid.uuid4())
     ctx = body.context or ContextEnvelope(
         customer=CustomerContext(
-            customer_id=body.customer_id, 
+            customer_id=customer_id, 
             phone_number=body.phone_number,
-            vehicle_id=body.vehicle_id
+            vehicle_id=vehicle_id,
+            vehicle_make=vehicle_make,
+            vehicle_model=vehicle_model,
+            vehicle_variant=vehicle_variant,
+            fuel_type=fuel_type,
+            registration_no=registration_no
         )
     )
-    repo = SessionRepository(session)
     await repo.create_conversation(
         session_id=session_id,
-        customer_id=body.customer_id,
+        customer_id=customer_id,
         context=ctx.model_dump(),
     )
     logger.info(
         "Session created",
-        extra={"session_id": session_id, "customer_id": body.customer_id},
+        extra={"session_id": session_id, "customer_id": customer_id},
     )
     return CreateSessionResponse(session_id=session_id)
 

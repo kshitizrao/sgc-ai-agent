@@ -70,7 +70,8 @@ def create_new_session(customer_id="test_cust_123", vehicle_id=None, phone_numbe
         if res.status_code == 200:
             st.session_state.session_id = res.json().get("session_id")
             st.session_state.messages = []
-            st.sidebar.success(f"Created Session: {st.session_state.session_id[:8]}...")
+            fetch_history(st.session_state.session_id)
+            st.sidebar.success(f"Session Active: {st.session_state.session_id[:8]}...")
     except Exception as e:
         st.sidebar.error(f"Failed to create session: {e}")
 
@@ -111,10 +112,13 @@ with st.sidebar:
     
     st.subheader("Session Management")
     cust_id = st.text_input("Customer ID", value="dev_tester")
-    phone_no = st.text_input("Phone Number (Optional)", value="")
+    phone_no = st.text_input("Phone Number (Required)", value="")
     veh_id = st.text_input("Vehicle ID (Optional)", value="")
     if st.button("Start New Session"):
-        create_new_session(cust_id, veh_id if veh_id else None, phone_no if phone_no else None)
+        if not phone_no:
+            st.error("Phone number is required")
+        else:
+            create_new_session(cust_id, veh_id if veh_id else None, phone_no)
         
     session_input = st.text_input("Or Load Existing Session ID:")
     if st.button("Load Session"):

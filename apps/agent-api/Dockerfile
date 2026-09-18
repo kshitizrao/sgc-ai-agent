@@ -9,7 +9,7 @@ COPY packages/ packages/
 COPY apps/agent-api/ apps/agent-api/
 COPY scripts/ scripts/
 
-RUN uv sync --package sgc-agent-api --package sgc-mcp-server
+RUN uv sync --package sgc-agent-api --package sgc-mcp-server --package sgc-db
 
 EXPOSE 8000
 

@@ -322,7 +322,9 @@ async def chat(
     if not conv:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    context = body.context or ContextEnvelope.model_validate(conv.context_snapshot or {})
+    context = ContextEnvelope.model_validate(conv.context_snapshot or {})
+    if body.context and body.context.location:
+        context.location = body.context.location
 
     # Save user message
     await repo.add_message(body.session_id, "user", body.message)

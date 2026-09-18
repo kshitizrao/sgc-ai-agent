@@ -109,6 +109,17 @@ with st.sidebar:
         
     st.divider()
     
+    st.subheader("Location Settings")
+    grant_loc = st.checkbox("Share Location Permission", value=False)
+    if grant_loc:
+        col1, col2 = st.columns(2)
+        with col1:
+            lat = st.number_input("Latitude", value=28.6139, format="%.4f")
+        with col2:
+            lng = st.number_input("Longitude", value=77.2090, format="%.4f")
+            
+    st.divider()
+    
     st.subheader("Session Management")
     phone_no = st.text_input("Phone Number (Required)", value="")
     veh_id = st.text_input("Vehicle ID (Optional)", value="")
@@ -171,6 +182,13 @@ if prompt := st.chat_input("Type your message here..."):
                     "session_id": st.session_state.session_id,
                     "message": prompt
                 }
+                if grant_loc:
+                    payload["context"] = {
+                        "location": {
+                            "latitude": lat,
+                            "longitude": lng
+                        }
+                    }
                 res = requests.post(f"{API_BASE_URL}/v1/chat", json=payload)
                 if res.status_code == 200:
                     data = res.json()

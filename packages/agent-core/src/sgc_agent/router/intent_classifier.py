@@ -32,13 +32,7 @@ INTENT_KEYWORDS: dict[IntentType, list[str]] = {
         "konsi", "list", "search", "meri", "mera",
     ],
     IntentType.PARTS: ["part", "spare", "brake pad", "filter", "oem", "stock", "available"],
-    IntentType.SERVICES_PRICING: [
-        "compare", "basic service", "standard service", "comprehensive",
-        "package", "difference", "fark", "antar",
-    ],
-    IntentType.QUICK_SERVICE: [
-        "express", "quick", "15 minute", "wiper", "top-up", "top up", "jaldi",
-    ],
+
     IntentType.CLAIMS: [
         "insurance", "claim", "surveyor", "liability", "deductible",
         "depreciation", "bima",

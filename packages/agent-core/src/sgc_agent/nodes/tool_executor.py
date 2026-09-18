@@ -91,6 +91,8 @@ async def execute_pikpart_query(
         context_parts.append(f"Vehicle make: {customer.vehicle_make}")
     if customer.vehicle_model:
         context_parts.append(f"Vehicle model: {customer.vehicle_model}")
+    if context.location:
+        context_parts.append(f"Location: Latitude {context.location.latitude}, Longitude {context.location.longitude}")
 
     context_str = "\n".join(context_parts) if context_parts else "No prior context available."
 

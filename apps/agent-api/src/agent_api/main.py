@@ -285,18 +285,6 @@ async def create_session(
                 fuel_type = v_data.get("fuel_type")
                 registration_no = v_data.get("registration_no")
 
-    if customer_id:
-        recent_conv = await session.execute(
-            select(Conversation)
-            .where(Conversation.customer_id == customer_id)
-            .order_by(Conversation.created_at.desc())
-            .limit(1)
-        )
-        recent_conv = recent_conv.scalar_one_or_none()
-        
-        if recent_conv:
-            return CreateSessionResponse(session_id=recent_conv.session_id)
-
     session_id = str(uuid.uuid4())
     ctx = body.context or ContextEnvelope(
         customer=CustomerContext(

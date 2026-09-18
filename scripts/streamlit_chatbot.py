@@ -70,7 +70,6 @@ def create_new_session(vehicle_id=None, phone_number=None):
         if res.status_code == 200:
             st.session_state.session_id = res.json().get("session_id")
             st.session_state.messages = []
-            fetch_history(st.session_state.session_id)
             st.sidebar.success(f"Session Active: {st.session_state.session_id[:8]}...")
     except Exception as e:
         st.sidebar.error(f"Failed to create session: {e}")

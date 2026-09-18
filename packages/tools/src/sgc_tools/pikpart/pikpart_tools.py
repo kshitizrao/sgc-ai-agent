@@ -448,8 +448,8 @@ class FindNearbyGaragesTool(BaseTool):
         try:
             q = text("""
                 SELECT sc.id AS service_centre_id,
-                    COALESCE(sc.garage_name, sc.name) AS garage_name,
-                    sc.name AS centre_name, sc.phone_number,
+                    COALESCE(sc.business_name, sc.garage_name, sc.name) AS garage_name,
+                    sc.business_name, sc.name AS centre_name, sc.phone_number,
                     sc.opening_hour, sc.closing_hour, sc.day_of_week,
                     sc.garage_type, sc.garage_category, sc.tier_type,
                     a.full_address, a.city, a.pincode,
@@ -467,7 +467,7 @@ class FindNearbyGaragesTool(BaseTool):
                     AND a.latitude IS NOT NULL AND a.longitude IS NOT NULL AND a.is_active = true
                 LEFT JOIN ratings rt ON rt.service_centre_id = sc.id
                 WHERE sc.is_active = true AND (sc.is_onboard = true OR sc.is_default = true)
-                GROUP BY sc.id, sc.garage_name, sc.name, sc.phone_number,
+                GROUP BY sc.id, sc.business_name, sc.garage_name, sc.name, sc.phone_number,
                     sc.opening_hour, sc.closing_hour, sc.day_of_week,
                     sc.garage_type, sc.garage_category, sc.tier_type,
                     a.full_address, a.city, a.pincode, a.latitude, a.longitude

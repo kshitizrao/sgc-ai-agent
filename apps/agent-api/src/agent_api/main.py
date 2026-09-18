@@ -264,7 +264,7 @@ async def create_session(
 
     if body.phone_number:
         from sqlalchemy import select
-        query = text("SELECT * FROM public.customers WHERE phone_number = :phone LIMIT 1")
+        query = text("SELECT * FROM public.customers WHERE RIGHT(phone_number, 10) = RIGHT(:phone, 10) OR RIGHT(alt_phone_number, 10) = RIGHT(:phone, 10) LIMIT 1")
         result = await pikpart_session.execute(query, {"phone": body.phone_number})
         customer_row = result.fetchone()
         

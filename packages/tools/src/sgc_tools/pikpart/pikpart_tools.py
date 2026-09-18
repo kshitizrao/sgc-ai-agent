@@ -403,7 +403,17 @@ class GetCustomerProfileAndContextTool(BaseTool):
                 GROUP BY b.id, sc.garage_name, sc.name
                 ORDER BY b."createdAt" DESC LIMIT 5
             """)
-            booking_history = [dict(r) for r in (await session.execute(history_q, {"cid": cust_id})).mappings().all()]
+            booking_history_raw = (await session.execute(history_q, {"cid": cust_id})).mappings().all()
+            booking_history = []
+            for r in booking_history_raw:
+                d = dict(r)
+                if d.get("booking_date"):
+                    d["booking_date"] = d["booking_date"].isoformat()
+                if d.get("estimated_price") is not None:
+                    d["estimated_price"] = float(d["estimated_price"])
+                if d.get("rating_given") is not None:
+                    d["rating_given"] = float(d["rating_given"])
+                booking_history.append(d)
 
             pref_q = text("""
                 SELECT b.service_centre_id AS garage_id,
@@ -418,6 +428,12 @@ class GetCustomerProfileAndContextTool(BaseTool):
             """)
             pref_row = (await session.execute(pref_q, {"cid": cust_id})).mappings().first()
             preferred_garage = dict(pref_row) if pref_row else None
+            if preferred_garage:
+                if preferred_garage.get("rating_given") is not None:
+                    preferred_garage["rating_given"] = float(preferred_garage["rating_given"])
+                if preferred_garage.get("visit_count") is not None:
+                    preferred_garage["visit_count"] = int(preferred_garage["visit_count"])
+
             last_garage = ({"garage_id": booking_history[0]["garage_id"],
                              "garage_name": booking_history[0]["garage_name"]}
                            if booking_history and booking_history[0].get("garage_id") else None)
@@ -485,8 +501,10 @@ class FindNearbyGaragesTool(BaseTool):
             garages = [{
                 "service_centre_id": r["service_centre_id"],
                 "garage_name": r["garage_name"] or r["centre_name"],
-                "phone_number": r["phone_number"], "opening_hour": r["opening_hour"],
-                "closing_hour": r["closing_hour"], "day_of_week": r["day_of_week"],
+                "phone_number": r["phone_number"], 
+                "opening_hour": str(r["opening_hour"]) if r["opening_hour"] else None,
+                "closing_hour": str(r["closing_hour"]) if r["closing_hour"] else None,
+                "day_of_week": r["day_of_week"],
                 "garage_type": r["garage_type"], "tier_type": r["tier_type"],
                 "address": r["full_address"], "city": r["city"], "pincode": r["pincode"],
                 "distance_km": round(float(r["distance_km"]), 2),

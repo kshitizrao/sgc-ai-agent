@@ -282,7 +282,7 @@ async def execute_intent_tools(
         kwargs = {
             "latitude": loc.latitude,
             "longitude": loc.longitude,
-            "customer_id": int(customer.customer_id) if customer.customer_id else None,
+            "customer_id": int(customer.customer_id) if (customer.customer_id and str(customer.customer_id).isdigit()) else None,
             "radius_km": 15
         }
     elif tool_name == "diagnose_symptom":

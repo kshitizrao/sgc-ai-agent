@@ -55,8 +55,10 @@ async def execute_pikpart_query(
     context: ContextEnvelope,
     llm_router,
     session_id: str | None = None,
+    registry=None,
+    db_session=None,
 ) -> tuple[list[dict], list[dict], list[float]]:
-    """Execute a PIKPART_QUERY intent via MCP tools.
+    """Execute a PIKPART_QUERY intent via MCP tools or local tools.
 
     Uses an LLM query planner to decide which MCP tools to call, then
     executes them and returns the aggregated results.
@@ -67,6 +69,11 @@ async def execute_pikpart_query(
     start = time.perf_counter()
     mcp_client = await get_mcp_client()
     tools_desc = mcp_client.get_tools_description()
+    
+    if registry:
+        local_tools = registry.list_tools()
+        for lt in local_tools:
+            tools_desc += f"\n- {lt['name']}: {lt['description']}"
 
     # ── Step 1: Ask LLM to plan the query ──────────────────────────────
     planner_prompt = QUERY_PLANNER_PROMPT.format(tools_description=tools_desc)
@@ -145,7 +152,7 @@ async def execute_pikpart_query(
         tool_args = tc.get("arguments", {})
 
         logger.info(
-            f"[Agent Tool Executor] Dispatched MCP Tool: '{tool_name}' | Caller File: '{__file__}'",
+            f"[Agent Tool Executor] Dispatched Tool: '{tool_name}' | Caller File: '{__file__}'",
             extra={
                 "session_id": session_id,
                 "tool": tool_name,
@@ -154,7 +161,19 @@ async def execute_pikpart_query(
             },
         )
 
-        result = await mcp_client.call_tool(tool_name, tool_args)
+        if registry and registry.get(tool_name) and db_session:
+            local_result = await registry.invoke(tool_name, db_session, **tool_args)
+            result = {
+                "tool_name": local_result.tool_name,
+                "success": local_result.success,
+                "data": local_result.data,
+                "error": local_result.error,
+            }
+            if local_result.source_refs:
+                all_refs.extend([r.model_dump() for r in local_result.source_refs])
+        else:
+            result = await mcp_client.call_tool(tool_name, tool_args)
+
         all_results.append(result)
 
         if result.get("data"):

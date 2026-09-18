@@ -109,6 +109,8 @@ class AgentOrchestrator:
                 context=context,
                 llm_router=self.llm_router,
                 session_id=session_id,
+                registry=self.registry,
+                db_session=self.db_session,
             )
         elif intent == IntentType.GENERAL_FAQ:
             # No tool execution needed for greetings/FAQ

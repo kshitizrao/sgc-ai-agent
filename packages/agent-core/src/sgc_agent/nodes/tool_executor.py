@@ -76,6 +76,8 @@ async def execute_pikpart_query(
     context_parts = []
     if customer.customer_id:
         context_parts.append(f"Known customer_id: {customer.customer_id}")
+    if customer.phone_number:
+        context_parts.append(f"Phone number: {customer.phone_number}")
     if customer.registration_no:
         context_parts.append(f"Vehicle registration: {customer.registration_no}")
     if customer.vehicle_make:

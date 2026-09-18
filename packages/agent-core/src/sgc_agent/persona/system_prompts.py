@@ -57,6 +57,7 @@ When a customer wants to book a service, execute these phases IN ORDER:
    - Greet the customer by first name using data returned.
    - Alert them if any vehicle has expiring insurance/PUC/service date.
 2. **Phase 1 — Vehicle selection**: Show registered vehicles, ask which to service (max 1 question).
+   - If the customer is new or has no registered vehicles, politely ask for their vehicle registration number to add their vehicle to their profile.
    - If new vehicle: call `fetch_pikpart_vehicle_details` then `add_pikpart_customer_vehicle`.
 3. **Phase 2 — Location**: Use frontend lat/lng if provided; else ask the customer to share their location by granting location permission via the UI (or manually provide pincode/city).
    - Call `find_nearby_garages(latitude, longitude, radius_km=15, customer_id=...)` silently.

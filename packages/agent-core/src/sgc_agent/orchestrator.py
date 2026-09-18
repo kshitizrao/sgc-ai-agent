@@ -175,6 +175,8 @@ class AgentOrchestrator:
         user_content_parts = []
         if context.customer.customer_id:
             user_content_parts.append(f"Customer ID: {context.customer.customer_id}")
+        if context.customer.first_name:
+            user_content_parts.append(f"Customer First Name: {context.customer.first_name}")
         if context.customer.vehicle_make:
             user_content_parts.append(f"Vehicle: {context.customer.vehicle_make} {context.customer.vehicle_model or ''}")
 

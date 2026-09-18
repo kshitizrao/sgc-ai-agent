@@ -31,6 +31,9 @@ INTENT_TOOL_MAP: dict[IntentType, str] = {
     IntentType.VEHICLE_INFO: "fetch_pikpart_vehicle_details",
 }
 
+# Intents that are routed through the MCP query planner
+MCP_ROUTED_INTENTS = {IntentType.PIKPART_QUERY, IntentType.SERVICE_BOOKING}
+
 
 def _extract_amounts(data: dict | list | None) -> list[float]:
     amounts: list[float] = []

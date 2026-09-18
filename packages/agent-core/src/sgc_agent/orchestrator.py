@@ -101,8 +101,9 @@ class AgentOrchestrator:
         # ── Step 3: Execute tools based on intent ──────────────────────
         tool_start = time.perf_counter()
 
-        if intent == IntentType.PIKPART_QUERY:
+        if intent in (IntentType.PIKPART_QUERY, IntentType.SERVICE_BOOKING):
             # MCP path — query prod_pikpart via MCP server
+            # SERVICE_BOOKING also uses MCP so the query planner can call booking tools
             tool_results, source_refs, tool_amounts = await execute_pikpart_query(
                 message=message,
                 context=context,

@@ -12,6 +12,7 @@ class IntentType(StrEnum):
     GENERAL_FAQ = "general_faq"
     VEHICLE_INFO = "vehicle_info"
     PIKPART_QUERY = "pikpart_query"
+    SERVICE_BOOKING = "service_booking"
 
 
 class TaskType(StrEnum):

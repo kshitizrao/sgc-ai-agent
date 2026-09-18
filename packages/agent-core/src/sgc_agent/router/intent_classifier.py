@@ -18,6 +18,12 @@ logger = logging.getLogger("agent.intent")
 # ═══════════════════════════════════════════════════════════════════════════
 
 INTENT_KEYWORDS: dict[IntentType, list[str]] = {
+    IntentType.SERVICE_BOOKING: [
+        "book", "booking karna", "service book", "service karwani", "service chahiye",
+        "appointment", "garage mein", "schedule karo", "book karo", "book a service",
+        "appoint", "book car", "book bike", "service lena", "slot lena",
+        "gaadi service", "gadi service",
+    ],
     IntentType.PIKPART_QUERY: [
         "booking", "customer", "vehicle", "service", "brand", "price", "kitna",
         "status", "history", "gaadi", "gadi", "bike", "scooty", "centre",

@@ -91,6 +91,15 @@ def create_registry() -> ToolRegistry:
         FetchPikpartVehicleDetailsTool,
         FetchPikpartCustomerServiceDetailsTool,
         AddPikpartCustomerVehicleTool,
+        # ── Booking flow tools ────────────────────────────────────────────
+        GetCustomerProfileAndContextTool,
+        FindNearbyGaragesTool,
+        GetServicesForVehicleAtGarageTool,
+        GetServicePackagesForVehicleTool,
+        GetAvailableSlotsTool,
+        GetPickupChargesTool,
+        CreateServiceBookingTool,
+        GetBookingHistoryTool,
     )
 
     registry = ToolRegistry()
@@ -122,6 +131,15 @@ def create_registry() -> ToolRegistry:
         FetchPikpartVehicleDetailsTool,
         FetchPikpartCustomerServiceDetailsTool,
         AddPikpartCustomerVehicleTool,
+        # ── Booking flow tools ────────────────────────────────────────────
+        GetCustomerProfileAndContextTool,
+        FindNearbyGaragesTool,
+        GetServicesForVehicleAtGarageTool,
+        GetServicePackagesForVehicleTool,
+        GetAvailableSlotsTool,
+        GetPickupChargesTool,
+        CreateServiceBookingTool,
+        GetBookingHistoryTool,
     ]:
         registry.register(tool_cls())
     return registry

@@ -40,11 +40,13 @@ class AgentOrchestrator:
     def __init__(
         self,
         db_session: AsyncSession,
+        pikpart_session: AsyncSession | None = None,
         registry: ToolRegistry | None = None,
         llm_router: ModelRouter | None = None,
         governance: GovernanceEngine | None = None,
     ):
         self.db_session = db_session
+        self.pikpart_session = pikpart_session
         self.registry = registry or create_registry()
         self.llm_router = llm_router or ModelRouter(use_mock=get_settings().environment == "test")
         self.governance = governance or GovernanceEngine(db_session)
@@ -110,7 +112,7 @@ class AgentOrchestrator:
                 llm_router=self.llm_router,
                 session_id=session_id,
                 registry=self.registry,
-                db_session=self.db_session,
+                db_session=self.pikpart_session or self.db_session,
             )
         elif intent == IntentType.GENERAL_FAQ:
             # No tool execution needed for greetings/FAQ

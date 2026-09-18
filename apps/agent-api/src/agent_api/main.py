@@ -317,6 +317,7 @@ async def create_session(
 async def chat(
     body: ChatRequest,
     session=Depends(get_db_session),
+    pikpart_session=Depends(get_pikpart_db_session),
 ):
     total_start = time.perf_counter()
 
@@ -338,7 +339,7 @@ async def chat(
 
     # Process through orchestrator
     registry = create_registry()
-    orchestrator = AgentOrchestrator(db_session=session, registry=registry)
+    orchestrator = AgentOrchestrator(db_session=session, pikpart_session=pikpart_session, registry=registry)
     result = await orchestrator.process_message(
         session_id=body.session_id,
         message=body.message,

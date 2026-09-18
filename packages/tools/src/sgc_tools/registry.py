@@ -49,7 +49,11 @@ class ToolRegistry:
             f"[ToolRegistry] Executing tool: '{name}' | Function/Class: '{tool.__class__.__name__}' | File: '{tool_file}'",
             extra={"tool": name, "tool_class": tool.__class__.__name__, "tool_file": tool_file}
         )
-        return await tool.execute(session, **kwargs)
+        try:
+            return await tool.execute(session, **kwargs)
+        except Exception as e:
+            logger.error(f"[ToolRegistry] Error executing tool {name}: {e}", exc_info=True)
+            return ToolResult(tool_name=name, success=False, error=str(e))
 
 
 def create_registry() -> ToolRegistry:

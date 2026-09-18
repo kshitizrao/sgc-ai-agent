@@ -3,7 +3,8 @@ from decimal import Decimal
 
 
 def extract_numbers(text: str) -> set[str]:
-    return set(re.findall(r"₹?\s*[\d,]+(?:\.\d{2})?", text))
+    # Extract only currency amounts (e.g. ₹ 500, Rs. 500) to prevent false positives on IDs/vehicle numbers.
+    return set(re.findall(r"(?:₹|Rs\.?|INR)\s*([\d,]+(?:\.\d{2})?)", text, re.IGNORECASE))
 
 
 def normalize_amount(value: str) -> str:

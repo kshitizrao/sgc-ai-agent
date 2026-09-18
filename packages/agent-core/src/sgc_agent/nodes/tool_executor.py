@@ -277,9 +277,11 @@ async def execute_intent_tools(
         kwargs = {"reported_issue": message}
     elif tool_name == "find_nearby_garages":
         loc = context.location
+        if not loc or loc.latitude is None or loc.longitude is None:
+            return [{"tool_name": tool_name, "success": False, "error": "Location coordinates (latitude and longitude) are missing. You MUST ask the user to share their location or grant location permissions to find nearby garages."}], [], []
         kwargs = {
-            "latitude": loc.latitude if loc else 28.6139,
-            "longitude": loc.longitude if loc else 77.2090,
+            "latitude": loc.latitude,
+            "longitude": loc.longitude,
             "customer_id": int(customer.customer_id) if customer.customer_id else None,
             "radius_km": 15
         }

@@ -443,8 +443,10 @@ class FindNearbyGaragesTool(BaseTool):
         "Optional: customer_id (int), radius_km (int, default 15)."
     )
 
-    async def execute(self, session, latitude: float, longitude: float,
+    async def execute(self, session, latitude: float | None = None, longitude: float | None = None,
                       radius_km: int = 15, customer_id: int | None = None, **kwargs):
+        if latitude is None or longitude is None:
+            return ToolResult(tool_name=self.name, success=False, error="Location coordinates (latitude and longitude) are missing. You MUST ask the user to share their location or grant location permissions to find nearby garages.")
         try:
             q = text("""
                 SELECT sc.id AS service_centre_id,

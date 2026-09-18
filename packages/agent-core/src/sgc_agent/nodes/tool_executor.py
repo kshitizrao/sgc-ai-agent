@@ -26,7 +26,7 @@ INTENT_TOOL_MAP: dict[IntentType, str] = {
     IntentType.QUICK_SERVICE: "list_quick_services",
     IntentType.CLAIMS: "get_claim_status",
     IntentType.RSA: "triage_emergency",
-    IntentType.GARAGE_MATCH: "recommend_garages",
+    IntentType.GARAGE_MATCH: "find_nearby_garages",
     IntentType.DIAGNOSTICS: "diagnose_symptom",
     IntentType.VEHICLE_INFO: "fetch_pikpart_vehicle_details",
 }
@@ -273,15 +273,13 @@ async def execute_intent_tools(
         kwargs = {"vehicle_reg_no": customer.registration_no}
     elif tool_name == "triage_emergency":
         kwargs = {"reported_issue": message}
-    elif tool_name == "recommend_garages":
+    elif tool_name == "find_nearby_garages":
         loc = context.location
         kwargs = {
-            "service_category": "AC Repair" if "ac" in message.lower() else "Periodic Service",
-            "vehicle_brand": customer.vehicle_make or "",
-            "vehicle_model": customer.vehicle_model or "",
-            "customer_lat": loc.latitude if loc else None,
-            "customer_lng": loc.longitude if loc else None,
-            "needs_pickup": "pickup" in message.lower(),
+            "latitude": loc.latitude if loc else 28.6139,
+            "longitude": loc.longitude if loc else 77.2090,
+            "customer_id": int(customer.customer_id) if customer.customer_id else None,
+            "radius_km": 15
         }
     elif tool_name == "diagnose_symptom":
         kwargs = {

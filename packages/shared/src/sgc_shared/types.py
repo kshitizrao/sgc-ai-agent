@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 
 class CustomerContext(BaseModel):
     customer_id: str | None = None
+    phone_number: str | None = None
     vehicle_id: str | None = None
     vehicle_make: str | None = None
     vehicle_model: str | None = None

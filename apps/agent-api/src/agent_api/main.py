@@ -193,6 +193,7 @@ async def log_requests(request: Request, call_next):
 
 class CreateSessionRequest(BaseModel):
     customer_id: str | None = None
+    phone_number: str | None = None
     vehicle_id: str | None = None
     context: ContextEnvelope | None = None
 
@@ -251,7 +252,11 @@ async def create_session(
 ):
     session_id = str(uuid.uuid4())
     ctx = body.context or ContextEnvelope(
-        customer=CustomerContext(customer_id=body.customer_id, vehicle_id=body.vehicle_id)
+        customer=CustomerContext(
+            customer_id=body.customer_id, 
+            phone_number=body.phone_number,
+            vehicle_id=body.vehicle_id
+        )
     )
     repo = SessionRepository(session)
     await repo.create_conversation(

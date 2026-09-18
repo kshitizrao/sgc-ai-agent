@@ -61,9 +61,11 @@ def fetch_mcp_tools():
     except Exception as e:
         st.sidebar.error(f"Failed to fetch tools: {e}")
 
-def create_new_session(customer_id="test_cust_123", vehicle_id=None):
+def create_new_session(customer_id="test_cust_123", vehicle_id=None, phone_number=None):
     try:
         payload = {"customer_id": customer_id, "vehicle_id": vehicle_id}
+        if phone_number:
+            payload["phone_number"] = phone_number
         res = requests.post(f"{API_BASE_URL}/v1/sessions", json=payload)
         if res.status_code == 200:
             st.session_state.session_id = res.json().get("session_id")
@@ -109,9 +111,10 @@ with st.sidebar:
     
     st.subheader("Session Management")
     cust_id = st.text_input("Customer ID", value="dev_tester")
+    phone_no = st.text_input("Phone Number (Optional)", value="")
     veh_id = st.text_input("Vehicle ID (Optional)", value="")
     if st.button("Start New Session"):
-        create_new_session(cust_id, veh_id if veh_id else None)
+        create_new_session(cust_id, veh_id if veh_id else None, phone_no if phone_no else None)
         
     session_input = st.text_input("Or Load Existing Session ID:")
     if st.button("Load Session"):

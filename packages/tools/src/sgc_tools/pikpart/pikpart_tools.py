@@ -3,71 +3,6 @@ from sqlalchemy import text
 from sgc_shared.types import ToolResult
 from sgc_tools.registry import BaseTool
 
-class FetchPikpartServicesTool(BaseTool):
-    name = "fetch_pikpart_services"
-    description = "Fetch services from the prod_pikpart database"
-
-    async def execute(self, session, limit=10, **kwargs):
-        query = text("SELECT * FROM public.services LIMIT :limit")
-        result = await session.execute(query, {"limit": limit})
-        return ToolResult(
-            tool_name=self.name,
-            success=True,
-            data=[dict(row._mapping) for row in result]
-        )
-
-class FetchPikpartCustomersTool(BaseTool):
-    name = "fetch_pikpart_customers"
-    description = "Fetch customers from the prod_pikpart database"
-
-    async def execute(self, session, limit=10, **kwargs):
-        query = text("SELECT * FROM public.customers LIMIT :limit")
-        result = await session.execute(query, {"limit": limit})
-        return ToolResult(
-            tool_name=self.name,
-            success=True,
-            data=[dict(row._mapping) for row in result]
-        )
-
-class FetchPikpartCustomerVehiclesTool(BaseTool):
-    name = "fetch_pikpart_customer_vehicles"
-    description = "Fetch customer vehicles from the prod_pikpart database"
-
-    async def execute(self, session, limit=10, **kwargs):
-        query = text("SELECT * FROM public.customer_vehicles LIMIT :limit")
-        result = await session.execute(query, {"limit": limit})
-        return ToolResult(
-            tool_name=self.name,
-            success=True,
-            data=[dict(row._mapping) for row in result]
-        )
-
-class FetchPikpartVehicleServicesTool(BaseTool):
-    name = "fetch_pikpart_vehicle_services"
-    description = "Fetch vehicle services from the prod_pikpart database"
-
-    async def execute(self, session, limit=10, **kwargs):
-        query = text("SELECT * FROM public.vehicle_services LIMIT :limit")
-        result = await session.execute(query, {"limit": limit})
-        return ToolResult(
-            tool_name=self.name,
-            success=True,
-            data=[dict(row._mapping) for row in result]
-        )
-
-class FetchPikpartBookingServicesTool(BaseTool):
-    name = "fetch_pikpart_booking_services"
-    description = "Fetch booking services from the prod_pikpart database"
-
-    async def execute(self, session, limit=10, **kwargs):
-        query = text("SELECT * FROM public.booking_services LIMIT :limit")
-        result = await session.execute(query, {"limit": limit})
-        return ToolResult(
-            tool_name=self.name,
-            success=True,
-            data=[dict(row._mapping) for row in result]
-        )
-
 class FetchPikpartBookingsTool(BaseTool):
     name = "fetch_pikpart_bookings"
     description = "Fetch bookings from the prod_pikpart database"
@@ -107,8 +42,6 @@ class FetchPikpartVehicleCategoriesTool(BaseTool):
             data=[dict(row._mapping) for row in result]
         )
 
-from sqlalchemy import text
-
 
 
 class FetchPikpartVehicleDetailsTool(BaseTool):
@@ -130,80 +63,6 @@ class FetchPikpartVehicleDetailsTool(BaseTool):
         except Exception as e:
             return ToolResult(tool_name=self.name, success=False, error=str(e))
 
-class FetchPikpartCustomerServiceDetailsTool(BaseTool):
-    name = "fetch_pikpart_customer_service_details"
-    description = "Fetch customer details, vehicle details, service types, garage details, service pricing, and discount against vehicle details. Requires phone number and service centre id."
-
-    async def execute(self, session, phone_number: str, service_centre_id: int, vehicle_no: str | None = None, **kwargs):
-        query_str = """
-            SELECT 
-                c.id AS customer_id,
-                c.first_name || ' ' || COALESCE(c.last_name, '') AS customer_name,
-                c.phone_number,
-                cv.id AS customer_vehicle_id,
-                cv.vehicle_no,
-                cv.make,
-                cv.model AS customer_vehicle_model,
-                cv.fuel_type AS customer_fuel_type,
-                cv.vehicle_model_type,
-                vs.id AS vehicle_service_id,
-                s.id AS service_id,
-                s.name AS service_name,
-                s.service_code,
-                scat.name AS service_category,
-                vs.price AS base_price,
-                COALESCE(vs.discount_percent, 0) AS discount_percent,
-                ROUND((vs.price - (vs.price * COALESCE(vs.discount_percent, 0) / 100.0))::numeric, 2) AS discounted_price,
-                vs.tier_type,
-                vs.service_centre_id AS garage_id
-            FROM customers c
-            LEFT JOIN customer_vehicles cv 
-                ON cv.customer_id = c.id 
-               AND cv.is_active = true
-               AND (:vehicle_no IS NULL OR LOWER(cv.vehicle_no) = LOWER(:vehicle_no))
-            LEFT JOIN vehicle_services vs 
-                ON vs.service_centre_id = :service_centre_id
-               AND vs.is_active = true
-               AND (
-                   vs.vehicle_model_id = cv.vehicle_id 
-                   OR LOWER(vs.model_name) = LOWER(cv.model)
-                   OR vs.vehicle_model_id IS NULL
-               )
-               AND (
-                   vs.fuel_type IS NULL 
-                   OR LOWER(vs.fuel_type) = LOWER(cv.fuel_type)
-               )
-            LEFT JOIN services s 
-                ON s.id = vs.service_id 
-               AND s.is_active = true
-            LEFT JOIN service_categories scat 
-                ON scat.id = vs.service_category_id
-            WHERE (
-                RIGHT(c.phone_number, 10) = RIGHT(:phone_number, 10) 
-                OR RIGHT(c.alt_phone_number, 10) = RIGHT(:phone_number, 10)
-            )
-            ORDER BY cv.id, scat.name, s.name ASC;
-        """
-        query = text(query_str)
-        params = {
-            "phone_number": phone_number,
-            "service_centre_id": service_centre_id,
-            "vehicle_no": vehicle_no
-        }
-        
-        try:
-            result = await session.execute(query, params)
-            return ToolResult(
-                tool_name=self.name,
-                success=True,
-                data=[dict(row._mapping) for row in result]
-            )
-        except Exception as e:
-            return ToolResult(
-                tool_name=self.name,
-                success=False,
-                error=str(e)
-            )
 
 class AddPikpartCustomerVehicleTool(BaseTool):
     name = "add_pikpart_customer_vehicle"
@@ -522,69 +381,14 @@ class FindNearbyGaragesTool(BaseTool):
             return ToolResult(tool_name=self.name, success=False, error=str(e))
 
 
-class GetServicesForVehicleAtGarageTool(BaseTool):
-    name = "get_services_for_vehicle_at_garage"
-    description = (
-        "Fetch individual services at a garage for a customer vehicle "
-        "(filtered by make, model, fuel_type). Returns categories with services, "
-        "pricing, duration, recommendation flags. "
-        "Requires service_centre_id (int) and customer_vehicle_id (int). "
-        "NOTE: call get_service_packages_for_vehicle separately for packages."
-    )
-
-    async def execute(self, session, service_centre_id: int, customer_vehicle_id: int, **kwargs):
-        try:
-            q = text("""
-                WITH veh AS (
-                    SELECT id, make, model, fuel_type, engine_cc, vehicle_id
-                    FROM customer_vehicles WHERE id = :cv_id AND is_active = true LIMIT 1
-                )
-                SELECT scat.id AS category_id, scat.name AS category_name, scat.priority,
-                    s.id AS service_id, s.name AS service_name, s.service_code,
-                    s.service_duration, s.service_recommendation, s.is_recommended, s.is_highlighted,
-                    vs.id AS vehicle_service_id, vs.price AS base_price,
-                    COALESCE(vs.discount_percent, 0) AS discount_percent,
-                    ROUND((vs.price - (vs.price * COALESCE(vs.discount_percent, 0) / 100.0))::numeric, 2) AS discounted_price,
-                    vs.tier_type
-                FROM vehicle_services vs
-                JOIN veh ON (
-                    vs.service_centre_id = :sc_id AND vs.is_active = true
-                    AND (vs.vehicle_model_id = veh.vehicle_id OR LOWER(vs.model_name) = LOWER(veh.model) OR vs.vehicle_model_id IS NULL)
-                    AND (vs.fuel_type IS NULL OR LOWER(vs.fuel_type) = LOWER(veh.fuel_type))
-                )
-                JOIN services s ON s.id = vs.service_id AND s.is_active = true
-                JOIN service_categories scat ON scat.id = vs.service_category_id AND scat.is_active = true
-                ORDER BY scat.priority ASC NULLS LAST, s.name ASC
-            """)
-            rows = (await session.execute(q, {"cv_id": customer_vehicle_id, "sc_id": service_centre_id})).mappings().all()
-            categories: dict = {}
-            for r in rows:
-                cid = r["category_id"]
-                if cid not in categories:
-                    categories[cid] = {"category_id": cid, "category_name": r["category_name"], "services": []}
-                categories[cid]["services"].append({
-                    "service_id": r["service_id"], "vehicle_service_id": r["vehicle_service_id"],
-                    "name": r["service_name"], "service_code": r["service_code"],
-                    "duration": r["service_duration"], "recommendation": r["service_recommendation"],
-                    "is_recommended": r["is_recommended"], "is_highlighted": r["is_highlighted"],
-                    "base_price": r["base_price"], "discount_percent": float(r["discount_percent"]),
-                    "discounted_price": float(r["discounted_price"]) if r["discounted_price"] else None,
-                    "tier_type": r["tier_type"],
-                })
-            return ToolResult(tool_name=self.name, success=True, data={
-                "service_centre_id": service_centre_id, "customer_vehicle_id": customer_vehicle_id,
-                "categories": list(categories.values()), "total_services": len(rows),
-            })
-        except Exception as e:
-            return ToolResult(tool_name=self.name, success=False, error=str(e))
-
-
 class GetServicePackagesForVehicleTool(BaseTool):
     name = "get_service_packages_for_vehicle"
     description = (
-        "Fetch bundled service packages at a garage for a customer vehicle "
-        "(filtered by vehicle_id and engine_cc range). "
-        "Show as SEPARATE step after individual service selection. "
+        "Fetch all service packages at a garage for a customer vehicle, "
+        "filtered by engine CC and vehicle model. Returns full package details "
+        "including name, actual price, discounted price, discount %, category, "
+        "and all line items (services + parts included in the package). "
+        "ALWAYS call this to show service pricing and packages to the customer. "
         "Requires service_centre_id (int) and customer_vehicle_id (int)."
     )
 
@@ -595,23 +399,232 @@ class GetServicePackagesForVehicleTool(BaseTool):
                     SELECT id, vehicle_id, engine_cc FROM customer_vehicles
                     WHERE id = :cv_id AND is_active = true LIMIT 1
                 )
-                SELECT sp.id AS package_id, sp.name AS package_name, sp.actual_price,
-                    sp.price AS discounted_price, sp.discount, sp.description,
-                    sp.tier_type, sp.icon_url, scat.name AS category_name
+                SELECT
+                    sp.id          AS package_id,
+                    sp.name        AS package_name,
+                    sp.actual_price,
+                    sp.price       AS discounted_price,
+                    sp.discount,
+                    sp.description,
+                    sp.tier_type,
+                    sp.icon_url,
+                    sp.service_centre_id,
+                    scat.name      AS category_name,
+                    json_agg(
+                        json_build_object(
+                            'item_name',       spi.name,
+                            'item_type',       spi.item_type,
+                            'count',           spi.count,
+                            'unit',            spi.unit,
+                            'discount_percent', spi.discount_percent
+                        )
+                        ORDER BY spi.item_type, spi.name
+                    ) FILTER (WHERE spi.id IS NOT NULL) AS items
                 FROM service_packages sp
                 JOIN veh ON (
-                    sp.service_centre_id = :sc_id AND sp.is_active = true
+                    sp.service_centre_id = :sc_id
+                    AND sp.is_active = true
                     AND (sp.vehicle_id IS NULL OR sp.vehicle_id = veh.vehicle_id)
-                    AND (sp.start_engine_cc IS NULL OR veh.engine_cc IS NULL
-                         OR veh.engine_cc BETWEEN sp.start_engine_cc AND COALESCE(sp.end_engine_cc, 99999))
+                    AND (
+                        sp.start_engine_cc IS NULL
+                        OR veh.engine_cc IS NULL
+                        OR veh.engine_cc BETWEEN sp.start_engine_cc
+                                         AND COALESCE(sp.end_engine_cc, 99999)
+                    )
                 )
-                LEFT JOIN service_categories scat ON scat.id = sp.service_category_id
+                LEFT JOIN service_package_items spi
+                    ON spi.service_package_id = sp.id AND spi.is_active = true
+                LEFT JOIN service_categories scat
+                    ON scat.id = sp.service_category_id
+                GROUP BY sp.id, sp.name, sp.actual_price, sp.price, sp.discount,
+                    sp.description, sp.tier_type, sp.icon_url, sp.service_centre_id,
+                    scat.name
                 ORDER BY sp.price ASC
             """)
             rows = (await session.execute(q, {"cv_id": customer_vehicle_id, "sc_id": service_centre_id})).mappings().all()
+            packages = []
+            for r in rows:
+                pkg = dict(r)
+                # Ensure items is a list (json_agg returns None when no items)
+                pkg["items"] = pkg["items"] if pkg["items"] else []
+                if pkg["actual_price"] is not None:
+                    pkg["actual_price"] = float(pkg["actual_price"])
+                if pkg["discounted_price"] is not None:
+                    pkg["discounted_price"] = float(pkg["discounted_price"])
+                packages.append(pkg)
             return ToolResult(tool_name=self.name, success=True, data={
-                "service_centre_id": service_centre_id, "customer_vehicle_id": customer_vehicle_id,
-                "packages": [dict(r) for r in rows], "count": len(rows),
+                "service_centre_id": service_centre_id,
+                "customer_vehicle_id": customer_vehicle_id,
+                "packages": packages,
+                "count": len(packages),
+            })
+        except Exception as e:
+            return ToolResult(tool_name=self.name, success=False, error=str(e))
+
+
+class GetPersonalizedPackageSuggestionsTool(BaseTool):
+    name = "get_personalized_package_suggestions"
+    description = (
+        "Analyze a customer's booking history, vehicle profile, and expiry dates to "
+        "suggest the most relevant service packages at the selected garage. "
+        "Returns ranked packages with a personalization tag explaining why each is "
+        "recommended (e.g. 'Due for service', 'Upgrade from your last visit', "
+        "'Popular at this garage', 'Never tried'). "
+        "Requires customer_id (int), customer_vehicle_id (int), service_centre_id (int)."
+    )
+
+    async def execute(
+        self, session,
+        customer_id: int,
+        customer_vehicle_id: int,
+        service_centre_id: int,
+        **kwargs,
+    ):
+        from datetime import date
+        try:
+            # ── 1. Vehicle + expiry details ──────────────────────────────
+            veh_row = (await session.execute(text("""
+                SELECT id, vehicle_id, engine_cc, next_service_date,
+                    insurance_expiry_date, pollution_expiry_date, make, model, fuel_type
+                FROM customer_vehicles
+                WHERE id = :cv_id AND is_active = true LIMIT 1
+            """), {"cv_id": customer_vehicle_id})).mappings().first()
+
+            if not veh_row:
+                return ToolResult(tool_name=self.name, success=False, error="Vehicle not found.")
+
+            today = date.today()
+            service_due = False
+            insurance_expiring = False
+            puc_expiring = False
+
+            if veh_row["next_service_date"]:
+                nsd = veh_row["next_service_date"]
+                nsd = nsd.date() if hasattr(nsd, "date") else nsd
+                service_due = (nsd - today).days <= 30
+
+            if veh_row["insurance_expiry_date"]:
+                ied = veh_row["insurance_expiry_date"]
+                ied = ied.date() if hasattr(ied, "date") else ied
+                insurance_expiring = (ied - today).days <= 30
+
+            if veh_row["pollution_expiry_date"]:
+                ped = veh_row["pollution_expiry_date"]
+                ped = ped.date() if hasattr(ped, "date") else ped
+                puc_expiring = (ped - today).days <= 30
+
+            engine_cc   = veh_row["engine_cc"]
+            vehicle_id  = veh_row["vehicle_id"]
+
+            # ── 2. Last booked packages for this customer + vehicle ───────
+            history_rows = (await session.execute(text("""
+                SELECT bp.service_package_id, sp.name AS package_name,
+                    b.booking_datetime, bp.status
+                FROM booking_packages bp
+                JOIN bookings b ON b.id = bp.booking_id
+                JOIN service_packages sp ON sp.id = bp.service_package_id
+                WHERE b.customer_id = :cid
+                    AND b.customer_vehicle_id = :cv_id
+                ORDER BY b."createdAt" DESC LIMIT 5
+            """), {"cid": customer_id, "cv_id": customer_vehicle_id})).mappings().all()
+
+            previously_booked_ids = {r["service_package_id"] for r in history_rows}
+            last_package_name = history_rows[0]["package_name"] if history_rows else None
+
+            # ── 3. Available packages at this garage for this vehicle ─────
+            pkg_rows = (await session.execute(text("""
+                SELECT
+                    sp.id AS package_id, sp.name AS package_name,
+                    sp.actual_price, sp.price AS discounted_price,
+                    sp.discount, sp.description, sp.tier_type,
+                    sp.icon_url, scat.name AS category_name,
+                    json_agg(
+                        json_build_object(
+                            'item_name',        spi.name,
+                            'item_type',        spi.item_type,
+                            'count',            spi.count,
+                            'unit',             spi.unit,
+                            'discount_percent',  spi.discount_percent
+                        )
+                        ORDER BY spi.item_type, spi.name
+                    ) FILTER (WHERE spi.id IS NOT NULL) AS items,
+                    COUNT(bp.id) AS popularity
+                FROM service_packages sp
+                LEFT JOIN service_package_items spi
+                    ON spi.service_package_id = sp.id AND spi.is_active = true
+                LEFT JOIN service_categories scat
+                    ON scat.id = sp.service_category_id
+                LEFT JOIN booking_packages bp
+                    ON bp.service_package_id = sp.id
+                WHERE sp.service_centre_id = :sc_id
+                    AND sp.is_active = true
+                    AND (:vehicle_id IS NULL OR sp.vehicle_id IS NULL OR sp.vehicle_id = :vehicle_id)
+                    AND (
+                        sp.start_engine_cc IS NULL OR :engine_cc IS NULL
+                        OR :engine_cc BETWEEN sp.start_engine_cc
+                                     AND COALESCE(sp.end_engine_cc, 99999)
+                    )
+                GROUP BY sp.id, sp.name, sp.actual_price, sp.price, sp.discount,
+                    sp.description, sp.tier_type, sp.icon_url, scat.name
+                ORDER BY sp.price ASC
+            """), {
+                "sc_id": service_centre_id,
+                "vehicle_id": vehicle_id,
+                "engine_cc": engine_cc,
+            })).mappings().all()
+
+            # ── 4. Rank and annotate ──────────────────────────────────────
+            suggestions = []
+            for r in pkg_rows:
+                pkg = dict(r)
+                pkg["items"]           = pkg["items"] if pkg["items"] else []
+                pkg["actual_price"]     = float(pkg["actual_price"] or 0)
+                pkg["discounted_price"] = float(pkg["discounted_price"] or 0)
+                pkg["popularity"]       = int(pkg["popularity"] or 0)
+
+                # Determine personalization tag + priority score
+                tags = []
+                score = 0
+
+                if service_due:
+                    tags.append("🔧 Due for service")
+                    score += 30
+
+                if pkg["package_id"] in previously_booked_ids:
+                    tags.append("🔁 Booked before")
+                    score += 10
+                else:
+                    tags.append("✨ New for you")
+                    score += 5
+
+                if last_package_name and last_package_name.lower() in (pkg["package_name"] or "").lower():
+                    tags.append("⬆️ Upgrade from last visit")
+                    score += 20
+
+                if pkg["popularity"] >= 3:
+                    tags.append(f"⭐ Popular at this garage ({pkg['popularity']} bookings)")
+                    score += pkg["popularity"]
+
+                if insurance_expiring:
+                    tags.append("⚠️ Insurance expiring soon")
+                if puc_expiring:
+                    tags.append("⚠️ PUC expiring soon")
+
+                pkg["recommendation_tags"] = tags
+                pkg["recommendation_score"] = score
+                suggestions.append(pkg)
+
+            # Sort by score descending
+            suggestions.sort(key=lambda x: x["recommendation_score"], reverse=True)
+
+            return ToolResult(tool_name=self.name, success=True, data={
+                "customer_id": customer_id,
+                "customer_vehicle_id": customer_vehicle_id,
+                "service_centre_id": service_centre_id,
+                "last_package_booked": last_package_name,
+                "service_due": service_due,
+                "suggestions": suggestions,
+                "count": len(suggestions),
             })
         except Exception as e:
             return ToolResult(tool_name=self.name, success=False, error=str(e))
@@ -804,33 +817,39 @@ class CreateServiceBookingTool(BaseTool):
                 "cname": f"{snap['first_name']} {snap['last_name'] or ''}".strip(),
             })).scalar_one()
 
+            # ── Insert individual a-la-carte services into booking_services ──
             for svc_id in (service_ids or []):
-                vs = (await session.execute(text("""
-                    SELECT vs.price, vs.discount_percent, s.name FROM vehicle_services vs
-                    JOIN services s ON s.id=vs.service_id
-                    WHERE vs.service_id=:sid AND vs.service_centre_id=:sc_id AND vs.is_active=true LIMIT 1
-                """), {"sid": svc_id, "sc_id": service_centre_id})).mappings().first()
-                price = float(vs["price"] or 0) if vs else 0.0
-                disc  = float(vs["discount_percent"] or 0) if vs else 0.0
+                svc = (await session.execute(text("""
+                    SELECT s.name FROM services s
+                    WHERE s.id = :sid AND s.is_active = true LIMIT 1
+                """), {"sid": svc_id})).mappings().first()
                 await session.execute(text("""
-                    INSERT INTO booking_services (booking_id, service_id, status, item_type,
-                        selling_price, discount_percent, name, created_by_user_type, "createdAt", "updatedAt")
-                    VALUES (:bid,:sid,'open','service',:sell,:disc,:nm,'customer',NOW(),NOW())
-                """), {"bid": booking_id, "sid": svc_id,
-                       "sell": round(price - price * disc / 100, 2), "disc": disc,
-                       "nm": vs["name"] if vs else None})
+                    INSERT INTO booking_services (
+                        booking_id, service_id, status, item_type,
+                        name, created_by_user_type, "createdAt", "updatedAt"
+                    ) VALUES (:bid, :sid, 'open', 'service', :nm, 'customer', NOW(), NOW())
+                """), {
+                    "bid": booking_id,
+                    "sid": svc_id,
+                    "nm": svc["name"] if svc else None,
+                })
 
+            # ── Insert packages into booking_packages (authoritative table) ──
             for pkg_id in (package_ids or []):
                 pkg = (await session.execute(
-                    text("SELECT name, price FROM service_packages WHERE id=:pid AND is_active=true LIMIT 1"),
-                    {"pid": pkg_id})).mappings().first()
+                    text("SELECT name, price FROM service_packages WHERE id = :pid AND is_active = true LIMIT 1"),
+                    {"pid": pkg_id},
+                )).mappings().first()
                 await session.execute(text("""
-                    INSERT INTO booking_services (booking_id, service_id, status, item_type,
-                        selling_price, name, created_by_user_type, "createdAt", "updatedAt")
-                    VALUES (:bid,:pid,'open','package',:price,:nm,'customer',NOW(),NOW())
-                """), {"bid": booking_id, "pid": pkg_id,
-                       "price": float(pkg["price"]) if pkg else 0.0,
-                       "nm": pkg["name"] if pkg else None})
+                    INSERT INTO booking_packages (
+                        booking_id, service_package_id, name, status,
+                        "createdAt", "updatedAt"
+                    ) VALUES (:bid, :pid, :nm, 'open', NOW(), NOW())
+                """), {
+                    "bid": booking_id,
+                    "pid": pkg_id,
+                    "nm": pkg["name"] if pkg else None,
+                })
 
             await session.commit()
             return ToolResult(tool_name=self.name, success=True, data={
@@ -870,12 +889,14 @@ class GetBookingHistoryTool(BaseTool):
                     b.pickup_facility, b.drop_facility, b.status,
                     b.estimated_price, b.customer_comment, b.vehicle_no, b.booking_type,
                     ARRAY_AGG(DISTINCT s.name) FILTER (WHERE s.name IS NOT NULL) AS services,
+                    ARRAY_AGG(DISTINCT bp.name) FILTER (WHERE bp.name IS NOT NULL) AS packages,
                     MAX(rt.rate) AS rating_given
                 FROM bookings b
                 LEFT JOIN service_centres sc ON sc.id=b.service_centre_id
                 LEFT JOIN customers c ON c.id=b.customer_id
                 LEFT JOIN booking_services bs ON bs.booking_id=b.id
                 LEFT JOIN services s ON s.id=bs.service_id
+                LEFT JOIN booking_packages bp ON bp.booking_id=b.id
                 LEFT JOIN ratings rt ON rt.service_centre_id=b.service_centre_id AND rt.customer_id=b.customer_id
                 WHERE (:phone IS NULL OR RIGHT(c.phone_number,10)=RIGHT(:phone,10))
                   AND (:cid IS NULL OR b.customer_id=:cid)
@@ -895,6 +916,7 @@ class GetBookingHistoryTool(BaseTool):
                     "estimated_price": r["estimated_price"], "customer_comment": r["customer_comment"],
                     "vehicle_no": r["vehicle_no"], "booking_type": r["booking_type"],
                     "services": r["services"] or [],
+                    "packages": r["packages"] or [],
                     "rating_given": float(r["rating_given"]) if r["rating_given"] else None,
                 })
             return ToolResult(tool_name=self.name, success=True, data={"bookings": history, "count": len(history)})

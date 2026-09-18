@@ -22,8 +22,6 @@ logger = logging.getLogger("agent.tool_executor")
 # ── Legacy intent → tool mapping (for non-MCP intents) ─────────────────
 INTENT_TOOL_MAP: dict[IntentType, str] = {
     IntentType.PARTS: "search_parts",
-    IntentType.SERVICES_PRICING: "compare_service_packages",
-    IntentType.QUICK_SERVICE: "list_quick_services",
     IntentType.CLAIMS: "get_claim_status",
     IntentType.RSA: "triage_emergency",
     IntentType.GARAGE_MATCH: "find_nearby_garages",
@@ -209,21 +207,18 @@ def _infer_tool_from_message(message: str, context: ContextEnvelope) -> dict:
         phone = phone_match.group(0)
         if any(w in lowered for w in ["booking", "history", "pichli", "service kab"]):
             return {"tool_calls": [{"tool": "get_booking_history", "arguments": {"phone_number": phone}}]}
-        garage_id = getattr(context.customer, "garage_id", 218)
-        args = {"phone_number": phone, "service_centre_id": garage_id}
-        if vehicle_match:
-            args["vehicle_no"] = vehicle_match.group(0)
-        return {"tool_calls": [{"tool": "fetch_pikpart_customer_service_details", "arguments": args}]}
+        # Fall through to booking context — need garage selection first
+        return {"tool_calls": [], "missing_info": "Please share your location so I can find nearby garages for you."}
 
     if vehicle_match:
         veh_no = vehicle_match.group(0)
-        if any(w in lowered for w in ["service", "price", "seva", "kitna"]):
-            return {"tool_calls": [{"tool": "find_services_for_vehicle", "arguments": {"vehicle_no": veh_no}}]}
-        return {"tool_calls": [{"tool": "get_customer_vehicles", "arguments": {"vehicle_no": veh_no}}]}
+        if any(w in lowered for w in ["service", "price", "seva", "kitna", "package"]):
+            return {"tool_calls": [{"tool": "fetch_pikpart_vehicle_details", "arguments": {"vehicle_number": veh_no}}]}
+        return {"tool_calls": [{"tool": "fetch_pikpart_vehicle_details", "arguments": {"vehicle_number": veh_no}}]}
 
     if any(w in lowered for w in ["booking", "bukking", "status"]):
         if customer.customer_id:
-            return {"tool_calls": [{"tool": "get_bookings", "arguments": {"customer_id": int(customer.customer_id)}}]}
+            return {"tool_calls": [{"tool": "get_booking_history", "arguments": {"customer_id": int(customer.customer_id)}}]}
         return {"tool_calls": [], "missing_info": "Aapka phone number ya booking ID share kar dijiye."}
 
     if any(w in lowered for w in ["brand", "company", "kaun si"]):
@@ -232,10 +227,9 @@ def _infer_tool_from_message(message: str, context: ContextEnvelope) -> dict:
     if any(w in lowered for w in ["category", "type", "prakar"]):
         return {"tool_calls": [{"tool": "list_vehicle_categories", "arguments": {}}]}
 
-    if any(w in lowered for w in ["service", "seva", "price", "kitna"]):
-        if customer.vehicle_model:
-            return {"tool_calls": [{"tool": "find_services_for_vehicle", "arguments": {"model": customer.vehicle_model}}]}
-        return {"tool_calls": [{"tool": "search_services", "arguments": {}}]}
+    if any(w in lowered for w in ["service", "seva", "price", "kitna", "package", "cost"]):
+        # Packages can only be fetched once garage + vehicle are confirmed
+        return {"tool_calls": [], "missing_info": "Please confirm your vehicle and preferred garage so I can show you the available service packages and pricing."}
 
     return {"tool_calls": [], "missing_info": "Aap kya jaanna chahte hain? Please thoda detail mein batayein."}
 
@@ -270,7 +264,7 @@ async def execute_intent_tools(
         tool_name = "compare_service_packages"
         kwargs = {}
     elif tool_name == "list_quick_services":
-        kwargs = {"symptom": message, "segment_id": "SEG-HATCH-PETROL"}
+        kwargs = {"symptom": message}
     elif tool_name == "get_claim_status":
         kwargs = {"vehicle_reg_no": customer.registration_no}
     elif tool_name == "triage_emergency":

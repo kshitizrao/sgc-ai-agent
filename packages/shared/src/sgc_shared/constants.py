@@ -3,8 +3,6 @@ from enum import StrEnum
 
 class IntentType(StrEnum):
     PARTS = "parts"
-    SERVICES_PRICING = "services_pricing"
-    QUICK_SERVICE = "quick_service"
     CLAIMS = "claims"
     RSA = "rsa"
     GARAGE_MATCH = "garage_match"

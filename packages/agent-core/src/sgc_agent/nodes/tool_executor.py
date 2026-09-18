@@ -260,11 +260,7 @@ async def execute_intent_tools(
             "model": customer.vehicle_model,
             "fuel_type": customer.fuel_type,
         }
-    elif tool_name == "estimate_service_cost":
-        tool_name = "compare_service_packages"
-        kwargs = {}
-    elif tool_name == "list_quick_services":
-        kwargs = {"symptom": message}
+
     elif tool_name == "get_claim_status":
         kwargs = {"vehicle_reg_no": customer.registration_no}
     elif tool_name == "triage_emergency":

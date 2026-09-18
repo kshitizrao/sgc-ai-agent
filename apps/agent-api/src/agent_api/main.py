@@ -255,6 +255,7 @@ async def create_session(
     repo = SessionRepository(session)
     customer_id = body.customer_id
     vehicle_id = body.vehicle_id
+    first_name = None
     
     vehicle_make = None
     vehicle_model = None
@@ -271,6 +272,7 @@ async def create_session(
         if customer_row:
             customer_data = dict(customer_row._mapping)
             customer_id = str(customer_data.get("id", customer_id))
+            first_name = customer_data.get("first_name")
             
             v_query = text("SELECT * FROM public.customer_vehicles WHERE customer_id = :cid ORDER BY id DESC LIMIT 1")
             v_result = await pikpart_session.execute(v_query, {"cid": customer_data.get("id")})
@@ -289,6 +291,7 @@ async def create_session(
     ctx = body.context or ContextEnvelope(
         customer=CustomerContext(
             customer_id=customer_id, 
+            first_name=first_name,
             phone_number=body.phone_number,
             vehicle_id=vehicle_id,
             vehicle_make=vehicle_make,

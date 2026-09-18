@@ -409,6 +409,8 @@ class GetCustomerProfileAndContextTool(BaseTool):
                 d = dict(r)
                 if d.get("booking_date"):
                     d["booking_date"] = d["booking_date"].isoformat()
+                if d.get("booking_slot"):
+                    d["booking_slot"] = str(d["booking_slot"])
                 if d.get("estimated_price") is not None:
                     d["estimated_price"] = float(d["estimated_price"])
                 if d.get("rating_given") is not None:

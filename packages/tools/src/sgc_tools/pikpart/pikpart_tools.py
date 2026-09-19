@@ -102,8 +102,8 @@ class AddPikpartCustomerVehicleTool(BaseTool):
             else:
                 first_name = customer_name or "Customer"
                 insert_cust = text("""
-                    INSERT INTO customers (first_name, phone_number, is_active)
-                    VALUES (:first_name, :phone_number, true)
+                    INSERT INTO customers (first_name, phone_number, is_active, "createdAt", "updatedAt")
+                    VALUES (:first_name, :phone_number, true, NOW(), NOW())
                     RETURNING id;
                 """)
                 res = await session.execute(insert_cust, {"first_name": first_name, "phone_number": phone_number})
@@ -138,8 +138,8 @@ class AddPikpartCustomerVehicleTool(BaseTool):
 
             # 3. Insert new vehicle entry linked to existing customer
             insert_veh = text("""
-                INSERT INTO customer_vehicles (customer_id, vehicle_no, make, model, fuel_type, vehicle_model_type, is_active)
-                VALUES (:customer_id, :vehicle_no, :make, :model, :fuel_type, :vehicle_model_type, true)
+                INSERT INTO customer_vehicles (customer_id, vehicle_no, make, model, fuel_type, vehicle_model_type, is_active, "createdAt", "updatedAt")
+                VALUES (:customer_id, :vehicle_no, :make, :model, :fuel_type, :vehicle_model_type, true, NOW(), NOW())
                 RETURNING id, customer_id, vehicle_no, make, model, fuel_type, vehicle_model_type;
             """)
             veh_insert_res = await session.execute(

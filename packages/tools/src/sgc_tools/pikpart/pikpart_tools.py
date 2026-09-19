@@ -348,7 +348,7 @@ class FindNearbyGaragesTool(BaseTool):
                     COUNT(rt.id) AS total_ratings,
                     MAX(CASE WHEN rt.customer_id = :cust_id THEN rt.rate END) AS my_rating
                 FROM service_centres sc
-                JOIN addresses a ON a.resource_id = sc.id AND a.resource_type = 'service_centre'
+                JOIN addresses a ON a.resource_id = sc.id AND a.resource_type = 'ServiceCentre'
                     AND a.latitude IS NOT NULL AND a.longitude IS NOT NULL AND a.is_active = true
                 LEFT JOIN ratings rt ON rt.service_centre_id = sc.id
                 WHERE sc.status = 'approved'
@@ -362,6 +362,7 @@ class FindNearbyGaragesTool(BaseTool):
                     + SIN(RADIANS(:lat)) * SIN(RADIANS(a.latitude))
                 ))) <= :radius
                 ORDER BY distance_km ASC
+                LIMIT 5
             """)
             rows = (await session.execute(q, {"lat": latitude, "lng": longitude,
                                               "radius": radius_km, "cust_id": customer_id})).mappings().all()

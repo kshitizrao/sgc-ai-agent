@@ -108,7 +108,20 @@ class GovernanceEngine:
             latency_ms=latency_ms,
         )
         self.db_session.add(event)
-        await self.db_session.commit()
+        
+        import sqlalchemy.exc
+        import logging
+        logger = logging.getLogger("agent.governance")
+        try:
+            await self.db_session.commit()
+        except sqlalchemy.exc.SQLAlchemyError as e:
+            logger.warning(f"Failed to commit governance event, rolling back and retrying: {e}")
+            await self.db_session.rollback()
+            self.db_session.add(event)
+            try:
+                await self.db_session.commit()
+            except Exception as retry_e:
+                logger.error(f"Failed to log governance event after retry: {retry_e}")
 
     def get_system_prompt(self) -> str:
         return self.system_prompt

@@ -53,6 +53,11 @@ class ToolRegistry:
             return await tool.execute(session, **kwargs)
         except Exception as e:
             logger.error(f"[ToolRegistry] Error executing tool {name}: {e}", exc_info=True)
+            try:
+                if session:
+                    await session.rollback()
+            except Exception as rollback_err:
+                logger.error(f"[ToolRegistry] Error rolling back session: {rollback_err}")
             return ToolResult(tool_name=name, success=False, error=str(e))
 
 

@@ -325,6 +325,12 @@ class FindNearbyGaragesTool(BaseTool):
         if latitude is None or longitude is None:
             return ToolResult(tool_name=self.name, success=False, error="Location coordinates (latitude and longitude) are missing. You MUST ask the user to share their location or grant location permissions to find nearby garages.")
         try:
+            latitude = float(latitude)
+            longitude = float(longitude)
+        except (ValueError, TypeError):
+            return ToolResult(tool_name=self.name, success=False, error="Location coordinates must be valid numbers.")
+            
+        try:
             q = text("""
                 SELECT sc.id AS service_centre_id,
                     COALESCE(sc.business_name, sc.garage_name, sc.name) AS garage_name,
@@ -721,9 +727,10 @@ class GetPickupChargesTool(BaseTool):
 
     async def execute(self, session, service_centre_id: int, distance_km: float, **kwargs):
         try:
+            distance_km = float(distance_km)
             rows = (await session.execute(
                 text('SELECT distance_range, "pickAmount" AS pc, "dropAmount" AS dc FROM pick_drop_charges WHERE service_centre_id=:sc_id AND is_active=true ORDER BY id ASC'),
-                {"sc_id": service_centre_id}
+                {"sc_id": int(service_centre_id)}
             )).mappings().all()
             matched = None
             for r in rows:
